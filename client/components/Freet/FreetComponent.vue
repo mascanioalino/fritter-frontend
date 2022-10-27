@@ -148,6 +148,7 @@ export default {
 
       try {
         const r = await fetch(`/api/freets/${this.freet._id}`, options);
+        console.log(options);
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
