@@ -16,6 +16,14 @@ const router = express.Router();
  *                      order by date modified
  */
 /**
+ * Get freet by id.
+ *
+ * @name GET /api/freets?freetId=freetId
+ *
+ * @return {FreetResponse[]} - A freet with id freetId
+ *
+ */
+/**
  * Get freets by author.
  *
  * @name GET /api/freets?author=username
@@ -29,13 +37,24 @@ router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if author query parameter was supplied
-    if (req.query.author !== undefined) {
+    if (req.query.author !== undefined || req.query.freetId !== undefined) {
       next();
       return;
     }
 
     const allFreets = await FreetCollection.findAll();
     const response = allFreets.map(util.constructFreetResponse);
+    res.status(200).json(response);
+  },
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Check if author query parameter was supplied
+    if (req.query.author !== undefined) {
+      next();
+      return;
+    }
+
+    const freet = await FreetCollection.findOne(req.query.freetId as string);
+    const response = util.constructFreetResponse(freet);
     res.status(200).json(response);
   },
   [
