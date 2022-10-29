@@ -5,6 +5,8 @@ import UserCollection from '../user/collection';
 import * as userValidator from '../user/middleware';
 import * as likeValidator from '../like/middleware';
 import * as util from './util';
+import {Document, Types} from 'mongoose';
+import {Like} from './model';
 const router = express.Router();
 
 /**
@@ -46,7 +48,12 @@ router.get(
   async (req: Request, res: Response) => {
     const hiddenFreetLikes = await LikeCollection.findAllHiddenLikesByFreet(req.query.freetId as string);
     const publicFreetLikes = await LikeCollection.findAllPublicLikesByFreet(req.query.freetId as string);
-    const response = {hidden: hiddenFreetLikes.map(util.constructLikeResponse), public: publicFreetLikes.map(util.constructLikeResponse)};
+    const user = await UserCollection.findOneByUserId(req.session.userId);
+    const userLike = await LikeCollection.findOneByUserAndFreet(user._id.toString(), req.query.freetId as string);
+    const hidden_liked = userLike ? userLike.hidden : false;
+    const liked = userLike ? !userLike.hidden : false;
+
+    const response = {hidden_likes: hiddenFreetLikes.length, public_likes: publicFreetLikes.length, hidden_liked, liked};
     res.status(200).json(response);
   }
 
@@ -67,11 +74,50 @@ router.post(
   [userValidator.isUserLoggedIn, likeValidator.isFreetExists],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const like = await LikeCollection.addOne(userId, req.body.freetId, req.body.hidden);
+    const like = await LikeCollection.findOneByUserAndFreet(userId, req.body.freetId);
+    if (like) {
+      if (like.hidden !== req.body.hidden) {
+        const deletedLike = await LikeCollection.deleteOne(req.body.freetId, req.session.userId as string);
+        const newLike = await LikeCollection.addOne(userId, req.body.freetId, req.body.hidden);
+        res.status(201).json({
+          message: 'Your like was created successfully.',
+          like: util.constructLikeResponse(newLike)
+        });
+      } else if (like.hidden === req.body.hidden) {
+        const deletedLike = await LikeCollection.deleteOne(req.body.freetId, req.session.userId as string);
+        res.status(201).json({
+          message: 'Your like was deleted successfully.'
+        });
+      }
+    } else {
+      const newLike = await LikeCollection.addOne(userId, req.body.freetId, req.body.hidden);
+      res.status(201).json({
+        message: 'Your like was created successfully.',
+        like: util.constructLikeResponse(newLike)
+      });
+    }
+  }
+);
 
-    res.status(201).json({
-      message: 'Your like was created successfully.',
-      like: util.constructLikeResponse(like)
+/**
+ * Delete a like.
+ *
+ * @name DELETE /api/likes/:freetId?
+ * @param {string} freetId - The id of the freet to unlike
+ *
+ * @return {string} - A success message
+ * @throws {403} - If the user is not logged in
+ * @throws {404} - If the user has not liked the freet
+ */
+router.delete(
+  '/',
+  [
+    userValidator.isUserLoggedIn, likeValidator.isUserLiked
+  ],
+  async (req: Request, res: Response) => {
+    await LikeCollection.deleteOne(req.body.freetId, req.session.userId as string);
+    res.status(200).json({
+      message: 'The like has been deleted successfully.'
     });
   }
 );

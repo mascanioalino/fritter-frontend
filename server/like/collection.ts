@@ -1,7 +1,6 @@
 import LikeModel from './model';
 import type {Like} from './model';
 import type {HydratedDocument, Types} from 'mongoose';
-import UserCollection from '../user/collection';
 
 class LikeCollection {
   /**
@@ -35,6 +34,19 @@ class LikeCollection {
     likeId: Types.ObjectId | string
   ): Promise<HydratedDocument<Like>> {
     return LikeModel.findOne({_id: likeId}).populate('authorId freetId');
+  }
+
+  /**
+   * Get all likes given by freet
+   *
+   * @param {string} userId - The id of the user
+   * @param {string} freetId - The id of the freet
+   * @return {Promise<HydratedDocument<Like>>} - A for a particular freet by user
+   */
+  static async findOneByUserAndFreet(
+    userId: Types.ObjectId | string, freetId: Types.ObjectId | string
+  ): Promise<HydratedDocument<Like>> {
+    return LikeModel.findOne({freetId, authorId: userId}).populate('authorId freetId');
   }
 
   /**
@@ -83,6 +95,18 @@ class LikeCollection {
     userId: Types.ObjectId | string
   ): Promise<Array<HydratedDocument<Like>>> {
     return LikeModel.find({authorId: userId, hidden: true}).populate('authorId freetId');
+  }
+
+  /**
+   * Delete a like from the freet.
+   *
+   * @param {string} freetId - The freetId of the like we intend to delete
+   * @return {Promise<Boolean>} - true if the like has been deleted, false otherwise
+   */
+  static async deleteOne(freetId: string, userId: string): Promise<boolean> {
+    const like = await LikeModel.deleteMany({authorId: userId, freetId});
+    console.log(like);
+    return like !== null;
   }
 }
 export default LikeCollection;

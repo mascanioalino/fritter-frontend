@@ -16,6 +16,12 @@
       </router-link>
       <router-link
         v-if="$store.state.username"
+        to="/bookmark"
+      >
+        Bookmarks
+      </router-link>
+      <router-link
+        v-if="$store.state.username"
         to="/account"
       >
         Account
@@ -44,9 +50,12 @@ nav {
     padding: 1vw 2vw;
     background-color: #ccc;
     display: flex;
+    /* flex-direction: column; */
     justify-content: space-between;
     align-items: center;
     position: relative;
+    /* height: 100%;
+    width: 10%; */
 }
 
 .title {

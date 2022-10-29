@@ -12,9 +12,7 @@ const isLikeExists = async (req: Request, res: Response, next: NextFunction) => 
   const like = validFormat ? await LikeCollection.findOne(req.params.likeId) : '';
   if (!like) {
     res.status(404).json({
-      error: {
-        freetNotFound: `Like with like ID ${req.params.likeId} does not exist.`
-      }
+      error: `Like with like ID ${req.params.likeId} does not exist.`
     });
     return;
   }
@@ -31,9 +29,7 @@ const isFreetExists = async (req: Request, res: Response, next: NextFunction) =>
   const freet = validFormat ? await FreetCollection.findOne(freetId) : '';
   if (!freet) {
     res.status(404).json({
-      error: {
-        freetNotFound: `Freet with freet ID ${freetId} does not exist.`
-      }
+      error: `Freet with freet ID ${freetId} does not exist.`
     });
     return;
   }
@@ -69,9 +65,26 @@ const isUserExists = async (req: Request, res: Response, next: NextFunction) => 
   next();
 };
 
+/**
+ * Checks if the user who has logged in has liked the freet
+ */
+const isUserLiked = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserCollection.findOneByUserId(req.session.userId as string);
+  const like = await LikeCollection.findOneByUserAndFreet(user._id.toString(), req.body.freetId);
+  if (!like) {
+    res.status(404).json({
+      error: `This user has not liked freet with freet id ${req.body.freetId as string}`
+    });
+    return;
+  }
+
+  next();
+};
+
 export {
   isLikeExists,
   isFreetExists,
   isAuthorExists,
-  isUserExists
+  isUserExists,
+  isUserLiked
 };
