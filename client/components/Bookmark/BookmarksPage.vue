@@ -1,10 +1,11 @@
 <template>
   <main>
-    <section v-if="$store.state.username" >
+    <section v-if="$store.state.username">
       <header>
         <h1>Bookmarks</h1>
         <h3>@{{ $store.state.username }}</h3>
       </header>
+      <CreateFolder />
       <section class="bookmarks">
         <div class="folders">
           <FolderComponent
@@ -15,7 +16,11 @@
             :selected="selected.folder === bookmark.folder"
           />
         </div>
-        <BookmarkComponent v-if="selected.folder" ref="bookmarkComponent" :selected="selected" />
+        <BookmarkComponent
+          v-if="selected.folder"
+          ref="bookmarkComponent"
+          :selected="selected"
+        />
       </section>
     </section>
     <section v-else>
@@ -35,9 +40,11 @@
 <script>
 import FolderComponent from "@/components/Bookmark/FolderComponent.vue";
 import BookmarkComponent from "@/components/Bookmark/BookmarkComponent.vue";
+import CreateFolder from "@/components/Bookmark/CreateFolder.vue";
+
 export default {
   name: "BookmarkPage",
-  components: { FolderComponent, BookmarkComponent },
+  components: { FolderComponent, BookmarkComponent, CreateFolder },
   data() {
     return { alerts: {}, bookmarks: {}, selected: {} };
   },
@@ -74,7 +81,7 @@ export default {
   flex-direction: row;
 }
 .folders {
-    width: 33%
+  width: 33%;
 }
 section {
   display: flex;

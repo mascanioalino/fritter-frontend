@@ -4,6 +4,7 @@ import FreetCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as freetValidator from '../freet/middleware';
 import * as util from './util';
+import BookmarkCollection from '../bookmark/collection';
 
 const router = express.Router();
 
@@ -114,6 +115,7 @@ router.delete(
   ],
   async (req: Request, res: Response) => {
     await FreetCollection.deleteOne(req.params.freetId);
+    await BookmarkCollection.removeFreet(req.params.freetId);
     res.status(200).json({
       message: 'Your freet was deleted successfully.'
     });

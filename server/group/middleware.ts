@@ -9,9 +9,7 @@ const isGroupDoesntExist = async (req: Request, res: Response, next: NextFunctio
   const group = await GroupCollection.findOne(req.body.groupName);
   if (group) {
     res.status(404).json({
-      error: {
-        groupNotFound: `Group with ${req.body.groupName} already exists.`
-      }
+      error: `Group with ${req.body.groupName} already exists.`
     });
     return;
   }
@@ -26,9 +24,8 @@ const isGroupExists = async (req: Request, res: Response, next: NextFunction) =>
   const group = await GroupCollection.findOne(req.body.groupName);
   if (!group) {
     res.status(404).json({
-      error: {
-        groupNotFound: `Group with ${req.body.groupName} does not exist.`
-      }
+      error: `Group with ${req.body.groupName} does not exist.`
+      
     });
     return;
   }
@@ -43,9 +40,7 @@ const isUserAdmin = async (req: Request, res: Response, next: NextFunction) => {
   const group = await GroupCollection.findOne(req.body.groupName);
   if (!group.admins.includes(req.session.userId)) {
     res.status(405).json({
-      error: {
-        userNotFound: `User ${req.session.userId} is not an admin`
-      }
+      error: `User ${req.session.userId} is not an admin`
     });
     return;
   }
@@ -61,9 +56,8 @@ const isUserRequests = async (req: Request, res: Response, next: NextFunction) =
   const requestingUser = await UserCollection.findOneByUsername(req.body.username);
   if (!group.requests.includes(requestingUser._id)) {
     res.status(406).json({
-      error: {
-        userNotFound: `User ${requestingUser._id} is not in a request`
-      }
+      error: `User ${requestingUser._id} is not in a request`
+      
     });
     return;
   }
@@ -78,9 +72,8 @@ const isUserOwner = async (req: Request, res: Response, next: NextFunction) => {
   const group = await GroupCollection.findOne(req.body.groupName);
   if (!group.owner.equals(req.session.userId)) {
     res.status(405).json({
-      error: {
-        userNotFound: `User ${req.session.userId as string} is not the owner`
-      }
+      error: `User ${req.session.userId as string} is not the owner`
+      
     });
     return;
   }

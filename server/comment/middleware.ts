@@ -11,9 +11,7 @@ const isCommentExists = async (req: Request, res: Response, next: NextFunction) 
   const comment = validFormat ? await CommentCollection.findOne(req.params.commentId) : '';
   if (!comment) {
     res.status(404).json({
-      error: {
-        commentNotFound: `Comment with comment ID ${req.params.commentId} does not exist.`
-      }
+      error: `Comment with comment ID ${req.params.commentId} does not exist.`
     });
     return;
   }
@@ -55,9 +53,7 @@ const isIdValid = async (req: Request, res: Response, next: NextFunction) => {
     const freet = validFormat ? await FreetCollection.findOne(freetId) : '';
     if (!freet) {
       res.status(404).json({
-        error: {
-          freetNotFound: `Freet with freet ID ${freetId} does not exist.`
-        }
+        error: `Freet with freet ID ${freetId} does not exist.`
       });
       return;
     }
@@ -66,17 +62,13 @@ const isIdValid = async (req: Request, res: Response, next: NextFunction) => {
     const comment = validFormat ? await CommentCollection.findOne(commentId) : '';
     if (!comment) {
       res.status(404).json({
-        error: {
-          commentNotFound: `Comment with comment ID ${commentId} does not exist.`
-        }
+        error: `Comment with comment ID ${commentId} does not exist.`
       });
       return;
     }
   } else {
     res.status(400).json({
-      error: {
-        parentNotFound: 'No comment or freet ID input'
-      }
+      error:  'No comment or freet ID input'
     });
     return;
   }

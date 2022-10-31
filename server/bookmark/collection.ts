@@ -1,9 +1,9 @@
-import BookmarkModel from './model';
-import type {Bookmark} from './model';
-import type {HydratedDocument} from 'mongoose';
-import type {Types} from 'mongoose';
-import UserCollection from '../user/collection';
-import FreetCollection from '../freet/collection';
+import BookmarkModel from "./model";
+import type { Bookmark } from "./model";
+import type { HydratedDocument } from "mongoose";
+import type { Types } from "mongoose";
+import UserCollection from "../user/collection";
+import FreetCollection from "../freet/collection";
 
 class BookmarkCollection {
   /**
@@ -13,14 +13,17 @@ class BookmarkCollection {
    * @param {string} userId - The id of the owner of the folder
    * @return {Promise<HydratedDocument<Bookmark>>} - The newly created bookmark
    */
-  static async addOne(folder: string, userId: Types.ObjectId | string): Promise<HydratedDocument<Bookmark>> {
+  static async addOne(
+    folder: string,
+    userId: Types.ObjectId | string
+  ): Promise<HydratedDocument<Bookmark>> {
     const bookmark = new BookmarkModel({
       userId,
       folder,
-      freets: []
+      freets: [],
     });
     await bookmark.save(); // Saves freet to MongoDB
-    return bookmark.populate('folder userId');
+    return bookmark.populate("folder userId");
   }
 
   /**
@@ -29,8 +32,11 @@ class BookmarkCollection {
    * @param {string} folder - The name of the folder
    * @return {Promise<HydratedDocument<Bookmark>>} - A bookmark with the folder name folder
    */
-  static async findOneByFolderAndUser(folder: string, userId: Types.ObjectId | string): Promise<HydratedDocument<Bookmark>> {
-    return BookmarkModel.findOne({folder, userId}).populate('folder userId');
+  static async findOneByFolderAndUser(
+    folder: string,
+    userId: Types.ObjectId | string
+  ): Promise<HydratedDocument<Bookmark>> {
+    return BookmarkModel.findOne({ folder, userId }).populate("folder userId");
   }
 
   /**
@@ -39,8 +45,10 @@ class BookmarkCollection {
    * @param {string} userId - The id of the owner of bookmarks
    * @return {Promise<HydratedDocument<Bookmark>[]>} - An array of all of the Bookmarks
    */
-  static async findAllByUserId(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Bookmark>>> {
-    return BookmarkModel.find({userId}).populate('userId');
+  static async findAllByUserId(
+    userId: Types.ObjectId | string
+  ): Promise<Array<HydratedDocument<Bookmark>>> {
+    return BookmarkModel.find({ userId }).populate("userId");
   }
 
   /**
@@ -50,19 +58,45 @@ class BookmarkCollection {
    * @param {string} freetId - The freet to add or remove
    * @return {Promise<HydratedDocument<Bookmark>>} - A bookmark with the change in freets
    */
-  static async updateOneByFolderAndFreet(folder: string, freetId: Types.ObjectId | string, userId: Types.ObjectId | string): Promise<HydratedDocument<Bookmark>> {
-    const bookmark = await BookmarkModel.findOne({folder, userId});
-    console.log({folder, userId});
+  static async updateOneByFolderAndFreet(
+    folder: string,
+    freetId: Types.ObjectId | string,
+    userId: Types.ObjectId | string
+  ): Promise<HydratedDocument<Bookmark>> {
+    const bookmark = await BookmarkModel.findOne({ folder, userId });
+    console.log({ folder, userId });
     const freet = await FreetCollection.findOne(freetId);
-    if (bookmark.freets.includes(freet._id)) { // Already in folder -> remove
-      bookmark.freets = bookmark.freets.filter((value, index, arr) => !value.equals(freet._id));
-    } else { // Not in the folder -> add to folder
+    if (bookmark.freets.includes(freet._id)) {
+      // Already in folder -> remove
+      bookmark.freets = bookmark.freets.filter(
+        (value, index, arr) => !value.equals(freet._id)
+      );
+    } else {
+      // Not in the folder -> add to folder
       bookmark.freets.push(freet._id);
     }
 
     await bookmark.save();
     return bookmark;
   }
+  /**
+   * Update all bookmarks by removing a freet
+   *
+   * @param {string} folder - The name of the folder
+   * @param {string} freetId - The freet to add or remove
+   * @return {Promise<HydratedDocument<Bookmark>>} - A bookmark with the change in freets
+   */
+  static async removeFreet(
+    freetId: Types.ObjectId | string
+  ): Promise<Array<HydratedDocument<Bookmark>>> {
+    const bookmarks = await BookmarkModel.find({ freets: freetId });
+    for (var bookmark of bookmarks) {
+      bookmark.freets = bookmark.freets.filter(
+        (value, index, arr) => !value.equals(freetId)
+      );
+      await bookmark.save();
+    }
+    return bookmarks;
+  }
 }
-
 export default BookmarkCollection;
