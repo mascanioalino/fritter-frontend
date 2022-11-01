@@ -43,6 +43,7 @@ router.get(
       req.query.freetId as string
     );
     const response = freetComments.map(util.constructCommentResponse);
+    console.log(response);
     res.status(200).json(response);
   }
 );

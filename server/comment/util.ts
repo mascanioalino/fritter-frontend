@@ -1,6 +1,7 @@
 import type {HydratedDocument} from 'mongoose';
 import moment from 'moment';
 import type {Comment, PopulatedComment} from '../comment/model';
+import UserCollection from 'server/user/collection';
 
 // Update this if you add a property to the Freet type!
 type CommentResponse = {
@@ -32,12 +33,11 @@ const constructCommentResponse = (comment: HydratedDocument<Comment>): CommentRe
       versionKey: false // Cosmetics; prevents returning of __v property
     })
   };
-  const {username} = commentCopy.userId;
-  delete commentCopy.userId;
+  const username = commentCopy.userId.username;
   return {
     ...commentCopy,
     _id: commentCopy._id.toString(),
-    userId: username,
+    userId: username, 
     dateCreated: formatDate(comment.dateCreated),
     parent: commentCopy.parent._id.toString(),
     content: commentCopy.content

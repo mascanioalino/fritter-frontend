@@ -60,7 +60,7 @@ class CommentCollection {
    * @return {Promise<HydratedDocument<Comment>[]>} - An array of all of the comments
    */
   static async findAllByFreet(freetId: Types.ObjectId | string): Promise<Array<HydratedDocument<Comment>>> {
-    return CommentModel.find({parent: freetId}).populate('parent');
+    return CommentModel.find({parent: freetId}).populate('userId');
   }
 
   /**
@@ -70,7 +70,7 @@ class CommentCollection {
    * @return {Promise<HydratedDocument<Comment>[]>} - An array of all of the comments
    */
   static async findAllByComment(commentId: Types.ObjectId | string) {
-    return CommentModel.find({parent: commentId}).populate('parent');
+    return CommentModel.find({parent: commentId}).populate('userId');
   }
 
   /**
