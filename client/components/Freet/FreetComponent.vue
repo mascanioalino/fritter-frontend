@@ -23,7 +23,7 @@
     </p>
     <div>
       <Likes v-if="$store.state.username" :key="freet._id" :freetId="freet._id" />
-      <Bookmark :freetId="freet._id"/>
+      <Bookmark :freetId="freet._id" v-on:bookmark="$emit('bookmark')"/>
       <p class="info">
         Posted at {{ freet.dateModified }}
         <i v-if="freet.edited">(edited)</i>

@@ -3,7 +3,7 @@
 
 <template>
   <article class="freets">
-    <FreetComponent v-for="freet in freets" :key="freet._id" :freet="freet" />
+    <FreetComponent v-on:bookmark="fetchData" v-for="freet in freets" :key="freet._id" :freet="freet" />
     <p v-if="freets.length===0">No freets in this folder</p>
   </article>
 </template>

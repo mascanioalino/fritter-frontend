@@ -75,20 +75,6 @@ export default {
       };
       this.request(params);
     },
-    hiddenLike() {
-      const url = `/api/likes`;
-      const params = {
-        method: "POST",
-        message: "Successfully hidden liked freet!",
-        body: JSON.stringify({ freetId: this.freetId, hidden: true }),
-        url: url,
-        callback: () => {
-          this.$set(this.alerts, params.message, "success");
-          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
-        },
-      };
-      this.request(params);
-    },
     async request(params) {
       /**
        * Submits a request to the freet's endpoint
@@ -113,7 +99,7 @@ export default {
 
         this.fetchData();
 
-        // params.callback();
+        this.$emit('bookmark');
       } catch (e) {
         this.$set(this.alerts, e, "error");
         setTimeout(() => this.$delete(this.alerts, e), 3000);
