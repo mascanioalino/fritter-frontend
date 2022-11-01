@@ -23,6 +23,7 @@
     </p>
     <div>
       <Likes v-if="$store.state.username" :key="freet._id" :freetId="freet._id" />
+      <Bookmark :freetId="freet._id"/>
       <p class="info">
         Posted at {{ freet.dateModified }}
         <i v-if="freet.edited">(edited)</i>
@@ -43,10 +44,11 @@
 
 <script>
 import Likes from '@/components/Freet/Likes.vue';
+import Bookmark from '@/components/Bookmark/Bookmark.vue';
 
 export default {
   name: "FreetComponent",
-  components: {Likes},
+  components: {Likes, Bookmark},
   props: {
     // Data from the stored freet
     freet: {

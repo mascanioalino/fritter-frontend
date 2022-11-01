@@ -5,15 +5,16 @@
         <h1>Bookmarks</h1>
         <h3>@{{ $store.state.username }}</h3>
       </header>
-      <CreateFolder />
+      <CreateFolder v-on:creation="fetchData"/>
       <section class="bookmarks">
         <div class="folders">
           <FolderComponent
-            @click.native="select"
+            v-on:selection="select" 
+            v-on:deletion="fetchData"
             v-for="bookmark in bookmarks"
             :key="bookmark._id"
             :bookmark="bookmark"
-            :selected="selected.folder === bookmark.folder"
+            :selected="selected"
           />
         </div>
         <BookmarkComponent
@@ -68,8 +69,8 @@ export default {
         setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
     },
-    async select(event) {
-      await this.$set(this.selected, "folder", event.target.innerText);
+    async select(f) {
+      await this.$set(this.selected, "folder", f);
       await this.$refs.bookmarkComponent.fetchData();
     },
   },

@@ -14,7 +14,7 @@ export default {
       title: "Create folder",
       callback: () => {
         const message = "Successfully created a folder!";
-        this.$router.push({ name: "Bookmark" });
+        this.$emit('creation');
         this.$set(this.alerts, message, "success");
         setTimeout(() => this.$delete(this.alerts, message), 3000);
       },

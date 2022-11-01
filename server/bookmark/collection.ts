@@ -98,5 +98,16 @@ class BookmarkCollection {
     }
     return bookmarks;
   }
+
+  /**
+   * Delete a folder with given name.
+   *
+   * @param {string} folderName - The name of folder to delete
+   * @return {Promise<Boolean>} - true if the folder has been deleted, false otherwise
+   */
+     static async deleteOne(folderName: string): Promise<boolean> {
+      const folder = await BookmarkModel.deleteOne({folder: folderName});
+      return folder !== null;
+    }
 }
 export default BookmarkCollection;

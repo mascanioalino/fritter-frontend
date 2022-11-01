@@ -94,4 +94,28 @@ router.put(
   }
 );
 
+/**
+ * Delete a folder
+ *
+ * @name DELETE /api/bookmarks/:folderName?
+ *
+ * @return {string} - A success message
+ * @throws {403} - If the user is not logged in or is not the author of
+ *                 the comment
+ * @throws {404} - If the commentId is not valid
+ */
+ router.delete(
+  '/',
+  [
+    userValidator.isUserLoggedIn,
+    bookmarkValidator.isFolderExists,
+  ],
+  async (req: Request, res: Response) => {
+    await BookmarkCollection.deleteOne(req.body.folder);
+    res.status(200).json({
+      message: 'Your folder was deleted successfully.'
+    });
+  }
+);
+
 export {router as bookmarkRouter};

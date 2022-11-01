@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="like">
-        <button v-if="this.likes.liked" @click="deleteLike">Dislike</button>
-        <button v-else @click="like">Like</button>
-        <p>{{ this.likes.public_likes }}</p>
-        <button v-if="this.likes.hidden_liked" @click="deleteLike">
+      <button v-if="this.likes.liked" @click="deleteLike">Dislike</button>
+      <button v-else @click="like">Like</button>
+      <p>{{ this.likes.public_likes }}</p>
+      <button v-if="this.likes.hidden_liked" @click="deleteLike">
         Dishiddenlike
-        </button>
-        <button v-else @click="hiddenLike">Hidden Like</button>
-        <p>{{ this.likes.hidden_likes }}</p>
+      </button>
+      <button v-else @click="hiddenLike">Hidden Like</button>
+      <p>{{ this.likes.hidden_likes }}</p>
     </div>
     <section class="alerts">
       <article
@@ -24,7 +24,7 @@
 
 <script>
 export default {
-  name: "FreetComponent",
+  name: "Likes",
   props: {
     freetId: {
       type: String,
@@ -38,7 +38,15 @@ export default {
     }; // Displays success/error messages encountered during freet modification
   },
   mounted() {
-    this.fetchData();
+  //   try {
+  //   fetch(`/api/likes?freetId=${this.freetId}`).then(res => {
+  //     return res.json()
+  //   }).then(res => this.likes = res);
+  // }catch (e) {
+  //       this.$set(this.alerts, e, "error");
+  //       setTimeout(() => this.$delete(this.alerts, e), 3000);
+  //     }
+  this.fetchData();
   },
   methods: {
     async fetchData() {
@@ -75,7 +83,7 @@ export default {
         const params = {
             method: "POST",
             message: "Successfully liked freet!",
-            body: JSON.stringify({freetId: this.freetId, hidden: false}), 
+            body: JSON.stringify({freetId: this.freetId, hidden: false}),
             url: url,
             callback: () => {
                 this.$set(this.alerts, params.message, "success");
@@ -89,7 +97,7 @@ export default {
         const params = {
             method: "POST",
             message: "Successfully hidden liked freet!",
-            body: JSON.stringify({freetId: this.freetId, hidden: true}), 
+            body: JSON.stringify({freetId: this.freetId, hidden: true}),
             url: url,
             callback: () => {
                 this.$set(this.alerts, params.message, "success");
@@ -133,15 +141,13 @@ export default {
 </script>
 
 <style scoped>
-
 .like {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 .like button {
-    height: 50%;
-    margin: 10px;
-
+  height: 50%;
+  margin: 10px;
 }
 </style>
