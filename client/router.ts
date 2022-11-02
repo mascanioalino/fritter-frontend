@@ -16,7 +16,8 @@ const routes = [
   {path: '/profile', name: 'Profile', component: ProfilePage},
   {path: '/login', name: 'Login', component: LoginPage},
   {path: '/bookmark', name: 'Bookmark', component: BookmarksPage},
-  {path: '*', name: 'Not Found', component: NotFound}
+  {path: '/:username', name: 'Profile', component: ProfilePage, props: true},
+  {path: '*', name: 'Not Found', component: NotFound},
 ];
 
 const router = new VueRouter({routes});

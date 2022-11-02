@@ -4,7 +4,7 @@
 <template>
   <article class="freet">
     <header>
-      <h3 class="author">@{{ freet.author }}</h3>
+      <h3 class="author"><a :href="`/#/${freet.author}`">@{{ freet.author }}</a></h3>
       <div v-if="$store.state.username === freet.author" class="actions">
         <button v-if="editing" @click="submitEdit">✅ Save changes</button>
         <button v-if="editing" @click="stopEditing">🚫 Discard changes</button>

@@ -16,13 +16,13 @@
       </div>
       <Freets
         v-if="this.selected === 'freets'"
-        :username="$store.state.username"
+        :username="this.username ? this.username : $store.state.username"
       />
       <HiddenLikes
         v-else-if="selected === 'hidden'"
-        :username="$store.state.username"
+        :username="this.username ? this.username : $store.state.username"
       />
-      <Likes v-else :username="$store.state.username" />
+      <Likes v-else :username="this.username ? this.username : $store.state.username" />
     </section>
   </main>
 </template>
