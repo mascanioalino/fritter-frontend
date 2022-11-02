@@ -108,5 +108,18 @@ class LikeCollection {
     console.log(like);
     return like !== null;
   }
+
+  /**
+   * Update all likes by removing a freet
+   *
+   * @param {string} freetId - The freet to add or remove
+   * @return {Promise<Boolean>} - A bookmark with the change in freets
+   */
+     static async removeFreet(
+      freetId: Types.ObjectId | string
+    ): Promise<Boolean> {
+      const likes = await LikeModel.deleteMany({ freetId });
+      return likes !== null ;
+    }
 }
 export default LikeCollection;

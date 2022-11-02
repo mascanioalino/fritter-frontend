@@ -12,7 +12,7 @@ const router = express.Router();
 /**
  * Get likes by user.
  *
- * @name GET /api/likes?userId=userId
+ * @name GET /api/likes?username=username
  *
  * @return {LikeResponse[]} - An array of likes given by user with id, authorId
  * @throws {403} - If user is not logged in

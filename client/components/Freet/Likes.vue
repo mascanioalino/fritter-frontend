@@ -38,14 +38,6 @@ export default {
     }; // Displays success/error messages encountered during freet modification
   },
   mounted() {
-  //   try {
-  //   fetch(`/api/likes?freetId=${this.freetId}`).then(res => {
-  //     return res.json()
-  //   }).then(res => this.likes = res);
-  // }catch (e) {
-  //       this.$set(this.alerts, e, "error");
-  //       setTimeout(() => this.$delete(this.alerts, e), 3000);
-  //     }
   this.fetchData();
   },
   methods: {

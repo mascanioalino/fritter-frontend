@@ -22,6 +22,7 @@ const constructLikeResponse = (like: HydratedDocument<Like>): LikeResponse => {
     })
   };
   delete likeCopy.authorId;
+  console.log(likeCopy);
   return {
     _id: likeCopy._id.toString(),
     freet: likeCopy.freetId._id.toString()
