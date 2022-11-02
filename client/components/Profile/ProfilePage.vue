@@ -5,12 +5,24 @@
   <main>
     <section>
       <header>
-        <h2>@{{ $store.state.username }}</h2>
+        <h2>@{{ this.username ? this.username : $store.state.username }}</h2>
       </header>
-      <button>Settings</button>
-      <Freets v-if="this.selected==='freets'" :username="$store.state.username" />
-      <HiddenLikes v-else-if="selected==='hidden'" :username="$store.state.username"/>
-      <Likes v-else :username="$store.state.username"/>
+      <button onClick="location.href='/#/account'">Settings</button>
+
+      <div class="selection">
+        <button @click="()=>this.selected='freets'" :class="{selected: this.selected==='freets'}">Freets</button>
+        <button @click="()=>this.selected='likes'" :class="{selected: this.selected==='likes'}">Likes</button>
+        <button @click="()=>this.selected='hidden'" :class="{selected: this.selected==='hidden'}" v-if="!this.username">Hidden Likes</button>
+      </div>
+      <Freets
+        v-if="this.selected === 'freets'"
+        :username="$store.state.username"
+      />
+      <HiddenLikes
+        v-else-if="selected === 'hidden'"
+        :username="$store.state.username"
+      />
+      <Likes v-else :username="$store.state.username" />
     </section>
   </main>
 </template>
@@ -24,12 +36,40 @@ export default {
   components: {
     Freets,
     HiddenLikes,
-    Likes
+    Likes,
+  },
+  props: {
+    username: {
+      type: String,
+      required: false,
+    },
   },
   data() {
     return {
-        selected: "dd"
-    }
+      selected: "freets",
+    };
   },
 };
 </script>
+
+<style>
+.selection {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-evenly;
+}
+.selection button {
+  border: none;
+  background-color: #f9f9f9;
+  min-width: 260px;
+  height: 20px;
+  z-index: 1;
+}
+.selection button:hover {
+  background-color: #a5dfb1;
+}
+.selection .selected {
+    background-color: #79c588;
+}
+</style>
