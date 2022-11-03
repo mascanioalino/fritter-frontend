@@ -33,10 +33,25 @@
               >
               <a v-else :href="`/#/${member}`">@{{ member }}</a>
             </h3>
-            <p v-if="admins.includes(member)">Admin</p>
-            <button v-else-if="admins.includes($store.state.username)" v-on:click="makeAdmin(member)">Make Admin</button>
+            <div>
+              <p v-if="admins.includes(member)">Admin</p>
+              <button
+                v-else-if="admins.includes($store.state.username)"
+                v-on:click="makeAdmin(member)"
+              >
+                Make Admin
+              </button>
+              <button
+                v-if="owner === $store.state.username && member!==$store.state.username"
+                v-on:click="makeOwner(member)"
+              >
+                Make Owner
+              </button>
+            </div>
           </div>
-          <button class="modal-default-button" @click="$emit('close')">OK</button>
+          <button class="modal-default-button" @click="$emit('close')">
+            OK
+          </button>
         </div>
       </div>
     </div>
@@ -57,25 +72,46 @@ export default {
     },
   },
   data() {
-    return { alerts: {}, admins: {}, members: {}, requests: {} };
+    return { alerts: {}, owner: {}, admins: {}, members: {}, requests: {} };
   },
   mounted() {
     this.fetchData();
   },
   methods: {
     fetchData() {
+      console.log(this.group);
       this.admins = this.group.admins;
       this.members = this.group.members;
       this.requests = this.group.requests;
+      this.owner = this.group.owner;
     },
     makeAdmin(username) {
       const params = {
         method: "PUT",
         body: JSON.stringify({
           groupName: this.group.groupName,
-          username: username
+          username: username,
         }),
         url: `/api/groups/admins`,
+        callback: () => {
+          this.$store.commit("alert", {
+            message: `Successfully ${
+              response ? "approved" : "rejected"
+            } ${req} to join group!`,
+            status: "success",
+          });
+        },
+      };
+      this.request(params);
+    },
+    makeOwner(username) {
+      const params = {
+        method: "PUT",
+        body: JSON.stringify({
+          groupName: this.group.groupName,
+          username: username,
+        }),
+        url: `/api/groups/owner`,
         callback: () => {
           this.$store.commit("alert", {
             message: `Successfully ${
@@ -145,6 +181,7 @@ export default {
 .names {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .modal-mask {
   position: fixed;
@@ -164,7 +201,7 @@ export default {
 }
 
 .modal-container {
-  width: 300px;
+  width: 500px;
   margin: 0px auto;
   padding: 30px 30px;
   background-color: #fff;

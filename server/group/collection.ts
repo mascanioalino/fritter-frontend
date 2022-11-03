@@ -166,17 +166,13 @@ class GroupCollection {
     const group = await GroupCollection.findOne(groupName);
     const newOwner = await UserCollection.findOneByUsername(username);
 
-    if (!group.admins.includes(newOwner._id)) {
+    if (
+      !group.admins
+        .map((x) => x._id.toString())
+        .includes(newOwner._id.toString())
+    ) {
       group.admins.push(newOwner._id);
     }
-
-    if (!group.followers.includes(newOwner._id)) {
-      group.followers.push(newOwner._id);
-    }
-
-    group.requests = group.requests.filter(
-      (value, index, arr) => !value.equals(newOwner._id)
-    );
 
     group.owner = newOwner._id;
 
