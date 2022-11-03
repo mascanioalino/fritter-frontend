@@ -38,9 +38,9 @@ const isGroupExists = async (req: Request, res: Response, next: NextFunction) =>
  */
 const isUserAdmin = async (req: Request, res: Response, next: NextFunction) => {
   const group = await GroupCollection.findOne(req.body.groupName);
-  if (!group.admins.includes(req.session.userId)) {
+  if (!group.admins.map(x=>x._id.toString()).includes(req.session.userId)) {
     res.status(405).json({
-      error: `User ${req.session.userId} is not an admin`
+      error: `You are not an admin`
     });
     return;
   }
@@ -54,9 +54,11 @@ const isUserAdmin = async (req: Request, res: Response, next: NextFunction) => {
 const isUserRequests = async (req: Request, res: Response, next: NextFunction) => {
   const group = await GroupCollection.findOne(req.body.groupName);
   const requestingUser = await UserCollection.findOneByUsername(req.body.username);
-  if (!group.requests.includes(requestingUser._id)) {
+  console.log(group);
+  console.log(requestingUser);
+  if (!group.requests.map(x=>x._id.toString()).includes(requestingUser._id.toString())) {
     res.status(406).json({
-      error: `User ${requestingUser._id} is not in a request`
+      error: `${requestingUser.username} is not in a request`
       
     });
     return;
@@ -72,7 +74,7 @@ const isUserOwner = async (req: Request, res: Response, next: NextFunction) => {
   const group = await GroupCollection.findOne(req.body.groupName);
   if (!group.owner.equals(req.session.userId)) {
     res.status(405).json({
-      error: `User ${req.session.userId as string} is not the owner`
+      error: `You are not the owner`
       
     });
     return;

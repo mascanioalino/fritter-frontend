@@ -19,7 +19,6 @@ router.get(
   '/',
   [groupValidator.isUserExists],
   async (req: Request, res: Response) => {
-    console.log('here00');
     const allGroups = await GroupCollection.findAllByUsername(req.query.username as string);
     const response = allGroups.map(util.constructGroupResponse);
     res.status(200).json(response);

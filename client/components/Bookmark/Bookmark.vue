@@ -120,7 +120,7 @@ export default {
   margin: 10px;
 }
 .dropbtn {
-  background-color: #4caf50;
+  background-color: #79c588;
   color: white;
   padding: 16px;
   font-size: 16px;
@@ -152,6 +152,6 @@ export default {
   cursor: pointer;
 }
 .dropdown-option:hover {
-  background-color: #4caf50;
+  background-color: #a5dfb1;
 }
 </style>

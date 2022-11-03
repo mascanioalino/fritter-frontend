@@ -1,8 +1,8 @@
-import GroupModel from './model';
-import type {Group} from './model';
-import type {HydratedDocument} from 'mongoose';
-import type {Types} from 'mongoose';
-import UserCollection from '../user/collection';
+import GroupModel from "./model";
+import type { Group } from "./model";
+import type { HydratedDocument } from "mongoose";
+import type { Types } from "mongoose";
+import UserCollection from "../user/collection";
 
 class GroupCollection {
   /**
@@ -12,17 +12,20 @@ class GroupCollection {
    * @param {string} userId - The id of the owner of the group
    * @return {Promise<HydratedDocument<Group>>} - The newly created group
    */
-  static async addOne(groupName: string, userId: Types.ObjectId | string): Promise<HydratedDocument<Group>> {
+  static async addOne(
+    groupName: string,
+    userId: Types.ObjectId | string
+  ): Promise<HydratedDocument<Group>> {
     const group = new GroupModel({
       groupName, // Must be unique
       members: [userId],
       followers: [userId],
       admins: [userId],
       requests: [],
-      owner: userId
+      owner: userId,
     });
     await group.save(); // Saves freet to MongoDB
-    return group.populate('groupName owner');
+    return group.populate("groupName owner admins members requests");
   }
 
   /**
@@ -32,7 +35,9 @@ class GroupCollection {
    * @return {Promise<HydratedDocument<Group>>} - A group with the groupName
    */
   static async findOne(groupName: string): Promise<HydratedDocument<Group>> {
-    return GroupModel.findOne({groupName}).populate('groupName');
+    return GroupModel.findOne({ groupName }).populate(
+      "requests groupName admins owner members"
+    );
   }
 
   /**
@@ -41,9 +46,13 @@ class GroupCollection {
    * @param {string} username - The username of the member of the groups
    * @return {Promise<HydratedDocument<Group>[]>} - An array of all of the groups
    */
-  static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Group>>> {
+  static async findAllByUsername(
+    username: string
+  ): Promise<Array<HydratedDocument<Group>>> {
     const user = await UserCollection.findOneByUsername(username);
-    return GroupModel.find({members: user._id}).populate('members');
+    return GroupModel.find({ members: user._id }).populate(
+      "requests groupName admins owner members"
+    );
   }
 
   /**
@@ -52,20 +61,32 @@ class GroupCollection {
    * @param {string} groupName - The name of the group
    * @return {Promise<HydratedDocument<Group>>} - A group with the groupName
    */
-  static async updateOneByJoinLeave(groupName: string, userId: Types.ObjectId | string): Promise<HydratedDocument<Group>> {
-    const group = await GroupModel.findOne({groupName});
+  static async updateOneByJoinLeave(
+    groupName: string,
+    userId: Types.ObjectId | string
+  ): Promise<HydratedDocument<Group>> {
+    const group = await GroupModel.findOne({ groupName });
     const user = await UserCollection.findOneByUserId(userId);
-    if (group.members.includes(user._id)) { // Already in group -> leave
-      group.members = group.members.filter((value, index, arr) => !value.equals(user._id));
-      group.admins = group.admins.filter((value, index, arr) => !value.equals(user._id));
-    } else if (group.requests.includes(user._id)) { // Already requested -> remove request
-      group.requests = group.requests.filter((value, index, arr) => !value.equals(user._id));
-    } else { // Not in the group or requested -> add to requests
+    if (group.members.includes(user._id)) {
+      // Already in group -> leave
+      group.members = group.members.filter(
+        (value, index, arr) => !value.equals(user._id)
+      );
+      group.admins = group.admins.filter(
+        (value, index, arr) => !value.equals(user._id)
+      );
+    } else if (group.requests.includes(user._id)) {
+      // Already requested -> remove request
+      group.requests = group.requests.filter(
+        (value, index, arr) => !value.equals(user._id)
+      );
+    } else {
+      // Not in the group or requested -> add to requests
       group.requests.push(user._id);
     }
 
     await group.save();
-    return group;
+    return group.populate("requests groupName admins owner members");
   }
 
   /**
@@ -74,23 +95,29 @@ class GroupCollection {
    * @param {string} groupName - The name of the group
    * @return {Promise<HydratedDocument<Group>>} - A group with the groupName
    */
-  static async updateOneByResponse(groupName: string, username: string, accept: boolean): Promise<HydratedDocument<Group>> {
-    const group = await GroupModel.findOne({groupName});
+  static async updateOneByResponse(
+    groupName: string,
+    username: string,
+    accept: boolean
+  ): Promise<HydratedDocument<Group>> {
+    const group = await GroupCollection.findOne(groupName);
     const requestingUser = await UserCollection.findOneByUsername(username);
 
-    if (group.requests.includes(requestingUser._id)) {
+    if (group.requests.map(x=>x._id.toString()).includes(requestingUser._id.toString())) {
       if (accept) {
         group.members.push(requestingUser._id);
-        if (!group.followers.includes(requestingUser._id)) {
+        if (!group.followers.map(x=>x._id.toString()).includes(requestingUser._id.toString())) {
           group.followers.push(requestingUser._id);
         }
       }
 
-      group.requests = group.requests.filter((value, index, arr) => !value.equals(requestingUser._id));
+      group.requests = group.requests.filter(
+        (value, index, arr) => value._id.toString()!==(requestingUser._id.toString())
+      );
     }
 
     await group.save();
-    return group;
+    return group.populate("requests groupName admins owner members");
   }
 
   /**
@@ -99,8 +126,11 @@ class GroupCollection {
    * @param {string} groupName - The name of the group
    * @return {Promise<HydratedDocument<Group>>} - A group with the groupName
    */
-  static async updateOneByAdmin(groupName: string, username: string): Promise<HydratedDocument<Group>> {
-    const group = await GroupModel.findOne({groupName});
+  static async updateOneByAdmin(
+    groupName: string,
+    username: string
+  ): Promise<HydratedDocument<Group>> {
+    const group = await GroupCollection.findOne(groupName);
     const newAdmin = await UserCollection.findOneByUsername(username);
     if (!group.admins.includes(newAdmin._id)) {
       group.admins.push(newAdmin._id);
@@ -112,11 +142,13 @@ class GroupCollection {
         group.members.push(newAdmin._id);
       }
 
-      group.requests = group.requests.filter((value, index, arr) => !value.equals(newAdmin._id));
+      group.requests = group.requests.filter(
+        (value, index, arr) => !value.equals(newAdmin._id)
+      );
     }
 
     await group.save();
-    return group;
+    return group.populate("requests groupName admins owner members");
   }
 
   /**
@@ -125,8 +157,11 @@ class GroupCollection {
    * @param {string} groupName - The name of the group
    * @return {Promise<HydratedDocument<Group>>} - A group with the new owner
    */
-  static async updateOneByOwner(groupName: string, username: string): Promise<HydratedDocument<Group>> {
-    const group = await GroupModel.findOne({groupName});
+  static async updateOneByOwner(
+    groupName: string,
+    username: string
+  ): Promise<HydratedDocument<Group>> {
+    const group = await GroupCollection.findOne(groupName);
     const newOwner = await UserCollection.findOneByUsername(username);
 
     if (!group.admins.includes(newOwner._id)) {
@@ -137,12 +172,14 @@ class GroupCollection {
       group.followers.push(newOwner._id);
     }
 
-    group.requests = group.requests.filter((value, index, arr) => !value.equals(newOwner._id));
+    group.requests = group.requests.filter(
+      (value, index, arr) => !value.equals(newOwner._id)
+    );
 
     group.owner = newOwner._id;
 
     await group.save();
-    return group;
+    return group.populate("requests groupName admins owner members");
   }
 
   /**
@@ -152,7 +189,7 @@ class GroupCollection {
    * @return {Promise<Boolean>} - true if the group has been deleted, false otherwise
    */
   static async deleteOne(groupName: string): Promise<boolean> {
-    const group = await GroupModel.deleteOne({groupName});
+    const group = await GroupModel.deleteOne({ groupName });
     console.log(group);
     return group !== null;
   }

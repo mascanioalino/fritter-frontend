@@ -4,7 +4,12 @@
 <template>
   <article class="freet">
     <header>
-      <h3 class="author"><a :href="`/#/${freet.author}`">@{{ freet.author }}</a></h3>
+      <h3 v-if="$store.state.username === freet.author" class="author">
+        <a :href="`/#/profile`">@{{ freet.author }}</a>
+      </h3>
+      <h3 v-else class="author">
+        <a :href="`/#/${freet.author}`">@{{ freet.author }}</a>
+      </h3>
       <div v-if="$store.state.username === freet.author" class="actions">
         <button v-if="editing" @click="submitEdit">✅ Save changes</button>
         <button v-if="editing" @click="stopEditing">🚫 Discard changes</button>
@@ -22,9 +27,13 @@
       {{ freet.content }}
     </p>
     <div>
-      <Likes v-if="$store.state.username" :key="freet._id" :freetId="freet._id" />
-      <Bookmark :freetId="freet._id" v-on:bookmark="$emit('bookmark')"/>
-      <CommentSection :parentId="freet._id" :name="freet._id" :post="'freet'"/>
+      <Likes
+        v-if="$store.state.username"
+        :key="freet._id"
+        :freetId="freet._id"
+      />
+      <Bookmark :freetId="freet._id" v-on:bookmark="$emit('bookmark')" />
+      <CommentSection :parentId="freet._id" :name="freet._id" :post="'freet'" />
       <p class="info">
         Posted at {{ freet.dateModified }}
         <i v-if="freet.edited">(edited)</i>
@@ -44,12 +53,12 @@
 </template>
 
 <script>
-import Likes from '@/components/Freet/Likes.vue';
-import Bookmark from '@/components/Bookmark/Bookmark.vue';
-import CommentSection from '@/components/Comment/CommentSection.vue';
+import Likes from "@/components/Freet/Likes.vue";
+import Bookmark from "@/components/Bookmark/Bookmark.vue";
+import CommentSection from "@/components/Comment/CommentSection.vue";
 export default {
   name: "FreetComponent",
-  components: {Likes, Bookmark, CommentSection},
+  components: { Likes, Bookmark, CommentSection },
   props: {
     // Data from the stored freet
     freet: {

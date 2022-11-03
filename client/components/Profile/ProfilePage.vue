@@ -7,8 +7,9 @@
       <header>
         <h2>@{{ this.username ? this.username : $store.state.username }}</h2>
       </header>
-      <button onClick="location.href='/#/account'">Settings</button>
-
+      <button v-if="!this.username" onClick="location.href='/#/account'">Settings</button>
+      <button v-if="!this.username" onClick="location.href='/#/groups'">Groups</button>
+      <button v-else :onClick="`location.href='/#/groups/${this.username}'`">Groups</button>
       <div class="selection">
         <button @click="()=>this.selected='freets'" :class="{selected: this.selected==='freets'}">Freets</button>
         <button @click="()=>this.selected='likes'" :class="{selected: this.selected==='likes'}">Likes</button>

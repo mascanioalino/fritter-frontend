@@ -5,7 +5,7 @@ import AccountPage from './components/Account/AccountPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
 import BookmarksPage from './components/Bookmark/BookmarksPage.vue';
 import ProfilePage from './components/Profile/ProfilePage.vue';
-
+import GroupsPage from './components/Group/GroupsPage.vue';
 import NotFound from './NotFound.vue';
 
 Vue.use(VueRouter);
@@ -16,7 +16,9 @@ const routes = [
   {path: '/profile', name: 'Profile', component: ProfilePage},
   {path: '/login', name: 'Login', component: LoginPage},
   {path: '/bookmark', name: 'Bookmark', component: BookmarksPage},
+  {path: '/groups', name: 'Group', component: GroupsPage},
   {path: '/:username', name: 'Profile', component: ProfilePage, props: true},
+  {path: '/groups/:username', name: 'Group', component: GroupsPage, props: true},
   {path: '*', name: 'Not Found', component: NotFound},
 ];
 

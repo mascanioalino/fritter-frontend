@@ -2,26 +2,26 @@
   <main>
     <section v-if="$store.state.username">
       <header>
-        <h1>Bookmarks</h1>
-        <h3>@{{ $store.state.username }}</h3>
+        <h1>Groups</h1>
+        <h3>@{{ this.username ? this.username : $store.state.username }}</h3>
       </header>
-      <CreateFolder v-on:creation="fetchData"/>
-      <section class="bookmarks">
-        <div class="folders">
-          <FolderComponent
-            v-on:selection="select" 
+      <CreateGroup v-on:creation="fetchData" />
+      <section class="groups">
+        <div class="group">
+          <GroupComponent
+            v-on:selection="select"
             v-on:deletion="fetchData"
-            v-for="bookmark in bookmarks"
-            :key="bookmark._id"
-            :bookmark="bookmark"
+            v-for="group in groups"
+            :key="group._id"
+            :group="group"
             :selected="selected"
           />
         </div>
-        <BookmarkComponent
-          v-if="selected.folder"
-          ref="bookmarkComponent"
-          :selected="selected"
-        />
+        <GroupProfile
+            v-if="selected.group"
+            ref="groupProfile"
+            :group="selected.group"
+          />
       </section>
     </section>
     <section v-else>
@@ -39,49 +39,59 @@
 </template>
 
 <script>
-import FolderComponent from "@/components/Bookmark/FolderComponent.vue";
-import BookmarkComponent from "@/components/Bookmark/BookmarkComponent.vue";
-import CreateFolder from "@/components/Bookmark/CreateFolder.vue";
+  import GroupProfile from "@/components/Group/GroupProfile.vue";
+import GroupComponent from "@/components/Group/GroupComponent.vue";
+import CreateGroup from "@/components/Group/CreateGroup.vue";
 
 export default {
-  name: "BookmarkPage",
-  components: { FolderComponent, BookmarkComponent, CreateFolder },
+  name: "GroupsPage",
+  props: {
+    username: {
+      required: false,
+      type: String,
+    },
+  },
+  components: { GroupComponent, CreateGroup, GroupProfile },
   data() {
-    return { alerts: {}, bookmarks: {}, selected: {} };
+    return { alerts: {}, groups: {}, selected: {} };
   },
   mounted() {
     this.fetchData();
   },
   methods: {
     async fetchData() {
-      const url = "/api/bookmarks";
+      const url = `/api/groups?username=${
+        this.username ? this.username : this.$store.state.username
+      }`;
       try {
         const r = await fetch(url);
         const res = await r.json();
         if (!r.ok) {
           throw new Error(res.error);
         }
-        this.bookmarks = res;
-        this.$set(this.selected, "folder", res[0].folder);
+        this.groups = res;
+        console.log(res);
+        this.$set(this.selected, "group", res[0]);
         console.log(this.selected);
       } catch (e) {
         this.$set(this.alerts, e, "error");
         setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
     },
-    async select(f) {
-      await this.$set(this.selected, "folder", f);
-      await this.$refs.fetchData();
+    async select(g) {
+      await this.$set(this.selected, "group", g);
+      console.log(this.selected);
     },
   },
+  
 };
 </script>
 
 <style scoped>
-.bookmarks {
+.groups {
   flex-direction: row;
 }
-.folders {
+.group {
   width: 33%;
 }
 section {

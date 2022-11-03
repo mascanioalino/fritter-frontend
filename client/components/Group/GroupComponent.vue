@@ -4,17 +4,26 @@
 <template>
   <article>
     <div
-      :class="
-        selected.folder === bookmark.folder ? 'folder-selected' : 'folder'
-      "
+      :class="selected.group === group ? 'group-selected' : 'group'"
     >
-      <div class="folderName" v-on:click="select">
-        {{ bookmark.folder }}
+      <div class="groupName" v-on:click="select">
+        {{ group.groupName }}
       </div>
       <div>
-        <button v-on:click="deleteFolder">Delete</button>
+        <button v-on:click="deleteGroup">Delete</button>
       </div>
     </div>
+    <section class="alerts">
+      <article
+        v-for="(status, alert, index) in alerts"
+        :key="index"
+        :class="status"
+      >
+        <p>
+          {{ alert }}
+        </p>
+      </article>
+    </section>
   </article>
 </template>
 
@@ -23,7 +32,7 @@ export default {
   name: "FolderComponent",
   props: {
     // Data from the stored freet
-    bookmark: {
+    group: {
       type: Object,
       required: true,
     },
@@ -38,14 +47,14 @@ export default {
     };
   },
   methods: {
-    deleteFolder() {
+    deleteGroup() {
       const params = {
         method: "DELETE",
-        body: JSON.stringify({ folder: this.bookmark.folder }),
-        url: `/api/bookmarks`,
+        body: JSON.stringify({ groupName: this.group.groupName }),
+        url: `/api/groups`,
         callback: () => {
           this.$store.commit("alert", {
-            message: "Successfully deleted folder!",
+            message: "Successfully deleted group!",
             status: "success",
           });
           this.$emit("deletion");
@@ -54,7 +63,7 @@ export default {
       this.request(params);
     },
     async select(event) {
-      this.$emit("selection", this.bookmark.folder);
+      this.$emit("selection", this.group);
     },
     async request(params) {
       /**
@@ -79,8 +88,10 @@ export default {
 
         params.callback();
       } catch (e) {
-        this.$set(this.alerts, e, "error");
-        setTimeout(() => this.$delete(this.alerts, e), 3000);
+        this.$store.commit("alert", {
+            message: e,
+            status: "error",
+          });
       }
     },
   },
@@ -88,13 +99,12 @@ export default {
 </script>
 
 <style scoped>
-.folderName {
+.groupName {
   height: 80px;
   flex-grow: 9;
-  padding: 30px
-  ;
+  padding: 30px;
 }
-.folder {
+.group {
   border: 1px solid #111;
   padding-right: 5px;
   position: relative;
@@ -102,7 +112,7 @@ export default {
   align-items: center;
   cursor: pointer;
 }
-.folder-selected {
+.group-selected {
   border: 1px solid #111;
   padding-right: 5px;
   position: relative;

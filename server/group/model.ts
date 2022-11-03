@@ -1,6 +1,6 @@
-import type {Types} from 'mongoose';
-import {Schema, model} from 'mongoose';
-import type {User} from '../user/model';
+import type { Types } from "mongoose";
+import { Schema, model } from "mongoose";
+import type { User } from "../user/model";
 
 /**
  * This file defines the properties stored in a Like
@@ -30,29 +30,33 @@ export type PopulatedGroup = {
 const GroupSchema = new Schema<Group>({
   groupName: {
     type: String,
-    required: true
+    required: true,
   },
   members: {
     type: [Schema.Types.ObjectId],
-    required: true
+    required: true,
+    ref: "User",
   },
   followers: {
     type: [Schema.Types.ObjectId],
-    required: true
+    required: true,
   },
   admins: {
     type: [Schema.Types.ObjectId],
-    required: true
+    required: true,
+    ref: "User",
   },
   requests: {
     type: [Schema.Types.ObjectId],
-    required: true
+    required: true,
+    ref: "User",
   },
   owner: {
     type: Schema.Types.ObjectId,
-    required: true
-  }
+    required: true,
+    ref: "User",
+  },
 });
 
-const GroupModel = model<Group>('Group', GroupSchema);
+const GroupModel = model<Group>("Group", GroupSchema);
 export default GroupModel;
