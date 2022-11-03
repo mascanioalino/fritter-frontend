@@ -70,9 +70,7 @@ export default {
           throw new Error(res.error);
         }
         this.groups = res;
-        console.log(res);
         this.$set(this.selected, "group", res[0]);
-        console.log(this.selected);
       } catch (e) {
         this.$set(this.alerts, e, "error");
         setTimeout(() => this.$delete(this.alerts, e), 3000);

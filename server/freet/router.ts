@@ -1,12 +1,12 @@
-import type {NextFunction, Request, Response} from 'express';
-import express from 'express';
-import FreetCollection from './collection';
-import * as userValidator from '../user/middleware';
-import * as freetValidator from '../freet/middleware';
-import * as groupValidator from '../group/middleware';
-import * as util from './util';
-import BookmarkCollection from '../bookmark/collection';
-import LikeCollection from '../like/collection';
+import type { NextFunction, Request, Response } from "express";
+import express from "express";
+import FreetCollection from "./collection";
+import * as userValidator from "../user/middleware";
+import * as freetValidator from "../freet/middleware";
+import * as groupValidator from "../group/middleware";
+import * as util from "./util";
+import BookmarkCollection from "../bookmark/collection";
+import LikeCollection from "../like/collection";
 
 const router = express.Router();
 
@@ -37,7 +37,7 @@ const router = express.Router();
  *
  */
 router.get(
-  '/',
+  "/",
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if author query parameter was supplied
     if (req.query.author !== undefined || req.query.freetId !== undefined) {
@@ -60,11 +60,11 @@ router.get(
     const response = util.constructFreetResponse(freet);
     res.status(200).json(response);
   },
-  [
-    userValidator.isAuthorExists
-  ],
+  [userValidator.isAuthorExists],
   async (req: Request, res: Response) => {
-    const authorFreets = await FreetCollection.findAllByUsername(req.query.author as string);
+    const authorFreets = await FreetCollection.findAllByUsername(
+      req.query.author as string
+    );
     const response = authorFreets.map(util.constructFreetResponse);
     res.status(200).json(response);
   }
@@ -80,15 +80,17 @@ router.get(
  * @throws {404} - If no group has given author
  *
  */
- router.get(
-  '/groups',
+router.get(
+  "/groups",
   [groupValidator.isGroupExists],
   async (req: Request, res: Response, next: NextFunction) => {
-    const groupFreets = await FreetCollection.findAllByGroupName(req.query.groupName as string);
+    const groupFreets = await FreetCollection.findAllByGroupName(
+      req.query.groupName as string
+    );
     const response = groupFreets.map(util.constructFreetResponse);
     res.status(200).json(response);
-  },
- );
+  }
+);
 
 /**
  * Create a new freet.
@@ -96,25 +98,30 @@ router.get(
  * @name POST /api/freets
  *
  * @param {string} content - The content of the freet
+ * @param {string} groupId - The id of the group
  * @return {FreetResponse} - The created freet
  * @throws {403} - If the user is not logged in
  * @throws {400} - If the freet content is empty or a stream of empty spaces
  * @throws {413} - If the freet content is more than 140 characters long
  */
 router.post(
-  '/',
-  [
-    userValidator.isUserLoggedIn,
-    freetValidator.isValidFreetContent
-  ],
+  "/",
+  [userValidator.isUserLoggedIn, freetValidator.isValidFreetContent],
   async (req: Request, res: Response) => {
-    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const freet = await FreetCollection.addOne(userId, req.body.content);
-
-    res.status(201).json({
-      message: 'Your freet was created successfully.',
-      freet: util.constructFreetResponse(freet)
-    });
+    const userId = (req.session.userId as string) ?? ""; // Will not be an empty string since its validated in isUserLoggedIn
+    if (req.body.groupId) {
+      const freet = await FreetCollection.addOneToGroup(userId, req.body.content, req.body.groupId);
+      res.status(201).json({
+        message: "Your freet was created successfully.",
+        freet: util.constructFreetResponse(freet),
+      });
+    } else {
+      const freet = await FreetCollection.addOne(userId, req.body.content);
+      res.status(201).json({
+        message: "Your freet was created successfully.",
+        freet: util.constructFreetResponse(freet),
+      });
+    }
   }
 );
 
@@ -129,18 +136,18 @@ router.post(
  * @throws {404} - If the freetId is not valid
  */
 router.delete(
-  '/:freetId?',
+  "/:freetId?",
   [
     userValidator.isUserLoggedIn,
     freetValidator.isFreetExists,
-    freetValidator.isValidFreetModifier
+    freetValidator.isValidFreetModifier,
   ],
   async (req: Request, res: Response) => {
     await FreetCollection.deleteOne(req.params.freetId);
     await BookmarkCollection.removeFreet(req.params.freetId);
     await LikeCollection.removeFreet(req.params.freetId);
     res.status(200).json({
-      message: 'Your freet was deleted successfully.'
+      message: "Your freet was deleted successfully.",
     });
   }
 );
@@ -159,20 +166,23 @@ router.delete(
  * @throws {413} - If the freet content is more than 140 characters long
  */
 router.patch(
-  '/:freetId?',
+  "/:freetId?",
   [
     userValidator.isUserLoggedIn,
     freetValidator.isFreetExists,
     freetValidator.isValidFreetModifier,
-    freetValidator.isValidFreetContent
+    freetValidator.isValidFreetContent,
   ],
   async (req: Request, res: Response) => {
-    const freet = await FreetCollection.updateOne(req.params.freetId, req.body.content);
+    const freet = await FreetCollection.updateOne(
+      req.params.freetId,
+      req.body.content
+    );
     res.status(200).json({
-      message: 'Your freet was updated successfully.',
-      freet: util.constructFreetResponse(freet)
+      message: "Your freet was updated successfully.",
+      freet: util.constructFreetResponse(freet),
     });
   }
 );
 
-export {router as freetRouter};
+export { router as freetRouter };

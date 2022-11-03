@@ -37,6 +37,31 @@ class FreetCollection {
   }
 
   /**
+   * Add a freet to the collection with group
+   *
+   * @param {string} authorId - The id of the author of the freet
+   * @param {string} groupId - The id of the group of the freet
+   * @param {string} content - The id of the content of the freet
+   * @return {Promise<HydratedDocument<Freet>>} - The newly created freet
+   */
+  static async addOneToGroup(
+    authorId: Types.ObjectId | string,
+    content: string,
+    groupId: Types.ObjectId | string
+  ): Promise<HydratedDocument<Freet>> {
+    const date = new Date();
+    const freet = new FreetModel({
+      authorId,
+      dateCreated: date,
+      content,
+      dateModified: date,
+      group: groupId
+    });
+    await freet.save(); // Saves freet to MongoDB
+    return freet.populate("authorId group");
+  }
+
+  /**
    * Find a freet by freetId
    *
    * @param {string} freetId - The id of the freet to find
