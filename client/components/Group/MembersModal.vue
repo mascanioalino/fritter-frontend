@@ -14,8 +14,10 @@
               >
               <a v-else :href="`/#/${req}`">@{{ req }}</a>
             </h3>
-            <button v-on:click="respond(req, true)">Accept</button>
-            <button v-on:click="respond(req, false)">Reject</button>
+            <div>
+              <button v-on:click="respond(req, true)">Accept</button>
+              <button v-on:click="respond(req, false)">Reject</button>
+            </div>
           </div>
         </div>
         <button class="modal-default-button" @click="$emit('close')">OK</button>
@@ -42,7 +44,10 @@
                 Make Admin
               </button>
               <button
-                v-if="owner === $store.state.username && member!==$store.state.username"
+                v-if="
+                  owner === $store.state.username &&
+                  member !== $store.state.username
+                "
                 v-on:click="makeOwner(member)"
               >
                 Make Owner
@@ -79,7 +84,6 @@ export default {
   },
   methods: {
     fetchData() {
-      console.log(this.group);
       this.admins = this.group.admins;
       this.members = this.group.members;
       this.requests = this.group.requests;
@@ -158,13 +162,15 @@ export default {
       if (params.body) {
         options.body = params.body;
       }
-      console.log(params);
       try {
         const r = await fetch(params.url, options);
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
         }
+        const res = await r.json();
+        this.$emit("update", res.group);
+        this.fetchData();
       } catch (e) {
         this.$store.commit("alert", {
           message: e,

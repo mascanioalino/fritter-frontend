@@ -2,15 +2,24 @@
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
-  <article>
+  <article v-if="selected.group">
     <div
-      :class="selected.group === group ? 'group-selected' : 'group'"
+      :class="
+        selected.group.groupName === group.groupName
+          ? 'group-selected'
+          : 'group'
+      "
     >
       <div class="groupName" v-on:click="select">
         {{ group.groupName }}
       </div>
       <div>
-        <button v-on:click="deleteGroup">Delete</button>
+        <button
+          v-if="this.group.owner === $store.state.username"
+          v-on:click="deleteGroup"
+        >
+          Delete
+        </button>
       </div>
     </div>
     <section class="alerts">
@@ -89,9 +98,9 @@ export default {
         params.callback();
       } catch (e) {
         this.$store.commit("alert", {
-            message: e,
-            status: "error",
-          });
+          message: e,
+          status: "error",
+        });
       }
     },
   },

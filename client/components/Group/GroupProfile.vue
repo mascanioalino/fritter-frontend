@@ -1,7 +1,7 @@
 <!-- Page for account settings and management -->
 <!-- User should be authenticated in order to see this page -->
 
-<template>
+<template v-if="renderComponent">
   <main>
     <section>
       <header>
@@ -14,6 +14,7 @@
         :group="this.group"
         @close="showMembers = false"
         :admin="false"
+        v-on:update="(res) => updateMembers(res)"
       />
       <button
         v-if="
@@ -41,6 +42,7 @@
         :group="this.group"
         @close="showRequests = false"
         :admin="true"
+        v-on:update="(res) => updateRequests(res)"
       />
       <h3>Owner: {{ this.group.owner }}</h3>
       <div class="selection">
@@ -75,6 +77,18 @@ export default {
     async fetchData() {
       await this.$refs.freets.fetchData();
     },
+    async updateMembers(res) {
+      this.$emit("update", res);
+      this.showMembers = false;
+      await this.$nextTick();
+      this.showMembers = true;
+    },
+    async updateRequests(res) {
+      this.$emit("update", res);
+      this.showRequests = false;
+      await this.$nextTick();
+      this.showRequests = true;
+    },
     requestJoin() {
       const params = {
         method: "PUT",
@@ -103,13 +117,14 @@ export default {
       if (params.body) {
         options.body = params.body;
       }
-      console.log(params);
       try {
         const r = await fetch(params.url, options);
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
         }
+        const res = await r.json();
+        this.$emit("update", res.group);
       } catch (e) {
         this.$store.commit("alert", {
           message: e,

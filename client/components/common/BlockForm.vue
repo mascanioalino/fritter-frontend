@@ -103,7 +103,6 @@ export default {
 
       try {
         const r = await fetch(this.url, optionsForm);
-        console.log();
         if (!r.ok) {
           // If response is not okay, we throw an error and enter the catch block
           const res = await r.json();

@@ -33,8 +33,8 @@
         :key="freet._id"
         :freetId="freet._id"
       />
-      <Bookmark :freetId="freet._id" v-on:bookmark="$emit('bookmark')" />
-      <CommentSection :parentId="freet._id" :name="freet._id" :post="'freet'" />
+      <Bookmark v-if="$store.state.username" :freetId="freet._id" v-on:bookmark="$emit('bookmark')" />
+      <CommentSection v-if="$store.state.username" :parentId="freet._id" :name="freet._id" :post="'freet'" />
       <p class="info">
         Posted at {{ freet.dateModified }}
         <i v-if="freet.edited">(edited)</i>
@@ -144,7 +144,6 @@ export default {
 
       try {
         const r = await fetch(`/api/freets/${this.freet._id}`, options);
-        console.log(options);
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);

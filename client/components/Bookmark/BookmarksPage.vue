@@ -63,7 +63,6 @@ export default {
         }
         this.bookmarks = res;
         this.$set(this.selected, "folder", res[0].folder);
-        console.log(this.selected);
       } catch (e) {
         this.$set(this.alerts, e, "error");
         setTimeout(() => this.$delete(this.alerts, e), 3000);

@@ -45,7 +45,6 @@
             throw new Error(res.error);
           }
           const likes = res.public;
-          console.log(likes);
           this.likes = likes;
         } catch (e) {
           this.$set(this.alerts, e, "error");

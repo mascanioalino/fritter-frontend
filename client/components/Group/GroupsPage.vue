@@ -15,12 +15,15 @@
             :key="group._id"
             :group="group"
             :selected="selected"
+            ref="groupComponent"
           />
         </div>
         <GroupProfile
           v-if="selected.group"
           ref="groupProfile"
           :group="selected.group"
+          v-on:update="(g) => this.update(g)"
+          :key="profileKey"
         />
       </section>
     </section>
@@ -53,12 +56,17 @@ export default {
   },
   components: { GroupComponent, CreateGroup, GroupProfile },
   data() {
-    return { alerts: {}, groups: {}, selected: {} };
+    return { profileKey: 0, alerts: {}, groups: {}, selected: {} };
   },
   mounted() {
-    this.fetchData();
+    this.fetchData().then(() =>
+      this.$set(this.selected, "group", this.groups[0])
+    );
   },
   methods: {
+    async update(g) {
+      this.fetchData().then(this.select(g));
+    },
     async fetchData() {
       const url = `/api/groups?username=${
         this.username ? this.username : this.$store.state.username
@@ -70,7 +78,6 @@ export default {
           throw new Error(res.error);
         }
         this.groups = res;
-        this.$set(this.selected, "group", res[0]);
       } catch (e) {
         this.$set(this.alerts, e, "error");
         setTimeout(() => this.$delete(this.alerts, e), 3000);
@@ -79,7 +86,6 @@ export default {
     async select(g) {
       await this.$set(this.selected, "group", g);
       await this.$refs.groupProfile.fetchData();
-      // await this.$refs.fetchData();
     },
   },
 };
