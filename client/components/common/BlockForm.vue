@@ -4,7 +4,7 @@
 <template>
   <div>
     <div v-if="this.options">
-      <SelectGroup
+      Post on behalf of: <SelectGroup
         :selected="this.selected"
         :groups="this.options"
         v-on:selection="select"
