@@ -103,16 +103,25 @@ class GroupCollection {
     const group = await GroupCollection.findOne(groupName);
     const requestingUser = await UserCollection.findOneByUsername(username);
 
-    if (group.requests.map(x=>x._id.toString()).includes(requestingUser._id.toString())) {
+    if (
+      group.requests
+        .map((x) => x._id.toString())
+        .includes(requestingUser._id.toString())
+    ) {
       if (accept) {
         group.members.push(requestingUser._id);
-        if (!group.followers.map(x=>x._id.toString()).includes(requestingUser._id.toString())) {
+        if (
+          !group.followers
+            .map((x) => x._id.toString())
+            .includes(requestingUser._id.toString())
+        ) {
           group.followers.push(requestingUser._id);
         }
       }
 
       group.requests = group.requests.filter(
-        (value, index, arr) => value._id.toString()!==(requestingUser._id.toString())
+        (value, index, arr) =>
+          value._id.toString() !== requestingUser._id.toString()
       );
     }
 
@@ -132,19 +141,12 @@ class GroupCollection {
   ): Promise<HydratedDocument<Group>> {
     const group = await GroupCollection.findOne(groupName);
     const newAdmin = await UserCollection.findOneByUsername(username);
-    if (!group.admins.includes(newAdmin._id)) {
+    if (
+      !group.admins
+        .map((x) => x._id.toString())
+        .includes(newAdmin._id.toString())
+    ) {
       group.admins.push(newAdmin._id);
-      if (!group.followers.includes(newAdmin._id)) {
-        group.followers.push(newAdmin._id);
-      }
-
-      if (!group.members.includes(newAdmin._id)) {
-        group.members.push(newAdmin._id);
-      }
-
-      group.requests = group.requests.filter(
-        (value, index, arr) => !value.equals(newAdmin._id)
-      );
     }
 
     await group.save();

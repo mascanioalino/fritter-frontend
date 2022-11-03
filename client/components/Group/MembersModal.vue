@@ -34,6 +34,7 @@
               <a v-else :href="`/#/${member}`">@{{ member }}</a>
             </h3>
             <p v-if="admins.includes(member)">Admin</p>
+            <button v-else-if="admins.includes($store.state.username)" v-on:click="makeAdmin(member)">Make Admin</button>
           </div>
           <button class="modal-default-button" @click="$emit('close')">OK</button>
         </div>
@@ -66,6 +67,25 @@ export default {
       this.admins = this.group.admins;
       this.members = this.group.members;
       this.requests = this.group.requests;
+    },
+    makeAdmin(username) {
+      const params = {
+        method: "PUT",
+        body: JSON.stringify({
+          groupName: this.group.groupName,
+          username: username
+        }),
+        url: `/api/groups/admins`,
+        callback: () => {
+          this.$store.commit("alert", {
+            message: `Successfully ${
+              response ? "approved" : "rejected"
+            } ${req} to join group!`,
+            status: "success",
+          });
+        },
+      };
+      this.request(params);
     },
     respond(req, response) {
       const params = {
