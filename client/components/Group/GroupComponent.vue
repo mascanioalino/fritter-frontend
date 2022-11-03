@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  name: "FolderComponent",
+  name: "GroupComponent",
   props: {
     // Data from the stored freet
     group: {

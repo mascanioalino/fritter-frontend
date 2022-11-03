@@ -18,10 +18,10 @@
           />
         </div>
         <GroupProfile
-            v-if="selected.group"
-            ref="groupProfile"
-            :group="selected.group"
-          />
+          v-if="selected.group"
+          ref="groupProfile"
+          :group="selected.group"
+        />
       </section>
     </section>
     <section v-else>
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-  import GroupProfile from "@/components/Group/GroupProfile.vue";
+import GroupProfile from "@/components/Group/GroupProfile.vue";
 import GroupComponent from "@/components/Group/GroupComponent.vue";
 import CreateGroup from "@/components/Group/CreateGroup.vue";
 
@@ -80,10 +80,10 @@ export default {
     },
     async select(g) {
       await this.$set(this.selected, "group", g);
-      console.log(this.selected);
+      await this.$refs.groupProfile.fetchData();
+      // await this.$refs.fetchData();
     },
   },
-  
 };
 </script>
 

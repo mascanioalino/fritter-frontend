@@ -26,8 +26,12 @@ export default {
   props: {
     username: {
       type: String,
-      required: true,
+      required: false,
     },
+    group: {
+      type: Object, 
+      required: false
+    }
   },
   data() {
     return { alerts: {}, freets: {} };
@@ -37,7 +41,7 @@ export default {
   },
   methods: {
     async fetchData() {
-      const url = `/api/freets?author=${this.username}`;
+      const url = this.username ? `/api/freets?author=${this.username}` : `/api/freets/groups?groupName=${this.group.groupName}`;
       try {
         const r = await fetch(url);
         const res = await r.json();

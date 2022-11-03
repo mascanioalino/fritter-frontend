@@ -3,6 +3,7 @@ import express from 'express';
 import FreetCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as freetValidator from '../freet/middleware';
+import * as groupValidator from '../group/middleware';
 import * as util from './util';
 import BookmarkCollection from '../bookmark/collection';
 import LikeCollection from '../like/collection';
@@ -68,6 +69,26 @@ router.get(
     res.status(200).json(response);
   }
 );
+
+/**
+ * Get freets by group.
+ *
+ * @name GET /api/freets/groups?groupName=groupName
+ *
+ * @return {FreetResponse[]} - An array of freets created by all users on behalf of group, groupName
+ * @throws {400} - If groupName is not given
+ * @throws {404} - If no group has given author
+ *
+ */
+ router.get(
+  '/groups',
+  [groupValidator.isGroupExists],
+  async (req: Request, res: Response, next: NextFunction) => {
+    const groupFreets = await FreetCollection.findAllByGroupName(req.query.groupName as string);
+    const response = groupFreets.map(util.constructFreetResponse);
+    res.status(200).json(response);
+  },
+ );
 
 /**
  * Create a new freet.

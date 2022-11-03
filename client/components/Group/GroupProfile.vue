@@ -23,7 +23,7 @@
         v-on:click="requestJoin"
       >
         Request to join
-    </button>
+      </button>
       <button
         v-else-if="this.group.requests.includes($store.state.username)"
         v-on:click="requestJoin"
@@ -46,9 +46,7 @@
       <div class="selection">
         <button class="selected">Freets</button>
       </div>
-      <!-- <Freets
-          :username="this.username ? this.username : $store.state.username"
-        /> -->
+      <Freets ref="freets" :group="this.group" />
     </section>
   </main>
 </template>
@@ -56,7 +54,7 @@
 import Freets from "@/components/Profile/Freets.vue";
 import MembersModal from "@/components/Group/MembersModal.vue";
 export default {
-  name: "AccountPage",
+  name: "GroupProfile",
   components: {
     Freets,
     MembersModal,
@@ -74,6 +72,9 @@ export default {
     };
   },
   methods: {
+    async fetchData() {
+      await this.$refs.freets.fetchData();
+    },
     requestJoin() {
       const params = {
         method: "PUT",

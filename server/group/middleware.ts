@@ -29,10 +29,11 @@ const isGroupExists = async (
   res: Response,
   next: NextFunction
 ) => {
-  const group = await GroupCollection.findOne(req.body.groupName);
+  const name = req.body.groupName || req.query.groupName;
+  const group = await GroupCollection.findOne(name);
   if (!group) {
     res.status(404).json({
-      error: `Group with ${req.body.groupName} does not exist.`,
+      error: `Group with ${name} does not exist.`,
     });
     return;
   }
