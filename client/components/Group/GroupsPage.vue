@@ -23,7 +23,7 @@
           ref="groupProfile"
           :group="selected.group"
           v-on:update="(g) => this.update(g)"
-          :key="profileKey"
+          v-on:deletion="fetchData"
         />
       </section>
     </section>
@@ -56,12 +56,10 @@ export default {
   },
   components: { GroupComponent, CreateGroup, GroupProfile },
   data() {
-    return { profileKey: 0, alerts: {}, groups: {}, selected: {} };
+    return { alerts: {}, groups: {}, selected: {} };
   },
   mounted() {
-    this.fetchData().then(() =>
-      this.$set(this.selected, "group", this.groups[0])
-    );
+    this.fetchData();
   },
   methods: {
     async update(g) {
@@ -78,6 +76,11 @@ export default {
           throw new Error(res.error);
         }
         this.groups = res;
+        this.$set(
+          this.selected,
+          "group",
+          this.groups[0] ? this.groups[0] : null
+        );
       } catch (e) {
         this.$set(this.alerts, e, "error");
         setTimeout(() => this.$delete(this.alerts, e), 3000);

@@ -44,6 +44,12 @@
         :admin="true"
         v-on:update="(res) => updateRequests(res)"
       />
+      <button
+        v-if="this.group.members.includes($store.state.username) && (this.group.owner!==$store.state.username)"
+        @click="leaveGroup"
+      >
+        Leave group
+      </button>
       <h3>Owner: {{ this.group.owner }}</h3>
       <div class="selection">
         <button class="selected">Freets</button>
@@ -101,6 +107,21 @@ export default {
           });
         },
       };
+      this.request(params);
+    },
+    leaveGroup() {
+      const params = {
+        method: "PUT",
+        body: JSON.stringify({ groupName: this.group.groupName }),
+        url: `/api/groups`,
+        callback: () => {
+          this.$store.commit("alert", {
+            message: "Successfully requested to join group!",
+            status: "success",
+          });
+        },
+      };
+      this.$emit('deletion');
       this.request(params);
     },
     async request(params) {
