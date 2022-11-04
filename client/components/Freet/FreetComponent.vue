@@ -4,23 +4,45 @@
 <template>
   <article class="freet">
     <header>
-      <h3 v-if="$store.state.username === freet.author" class="author">
-        <a :href="`/#/profile`">@{{ freet.author }}</a>
-      </h3>
-      <h3 v-else class="author">
-        <a :href="`/#/${freet.author}`">@{{ freet.author }}</a>
-      </h3>
-      <h4 v-if="freet.group">On behalf of &{{ freet.group }}</h4>
-      <div v-if="$store.state.username === freet.author" class="actions">
-        <button v-if="editing" @click="submitEdit">✅ Save changes</button>
-        <button v-if="editing" @click="stopEditing">🚫 Discard changes</button>
-        <button v-if="!editing" @click="startEditing">✏️ Edit</button>
-        <button @click="deleteFreet">🗑️ Delete</button>
+      <div class="freet-info">
+        <h3 v-if="$store.state.username === freet.author" class="author">
+          <a :href="`/#/profile`">@{{ freet.author }}</a>
+        </h3>
+        <h3 v-else class="author">
+          <a :href="`/#/${freet.author}`">@{{ freet.author }}</a>
+        </h3>
+        <div v-if="$store.state.username === freet.author" class="dropdown">
+          <button class="dropbtn">
+            <img :src="require('@/public/assets/Three Dots.svg')" />
+          </button>
+          <div class="dropdown-content">
+            <button class="dropdown-option" v-if="editing" @click="submitEdit">
+              ✅ Save changes
+            </button>
+            <button class="dropdown-option" v-if="editing" @click="stopEditing">
+              🚫 Discard changes
+            </button>
+            <button
+              class="dropdown-option"
+              v-if="!editing"
+              @click="startEditing"
+            >
+              ✏️ Edit
+            </button>
+            <button class="dropdown-option" @click="deleteFreet">
+              🗑️ Delete
+            </button>
+          </div>
+        </div>
       </div>
-      <p class="info">
-        Posted at {{ freet.dateModified }}
-        <i v-if="freet.edited">(edited)</i>
-      </p>
+      <div class="freet-info">
+        <h4 v-if="freet.group">On behalf of &{{ freet.group }}</h4>
+
+        <p class="info">
+          Posted at {{ freet.dateModified }}
+          <i v-if="freet.edited">(edited)</i>
+        </p>
+      </div>
     </header>
     <textarea
       v-if="editing"
@@ -178,8 +200,57 @@ export default {
   align-items: center;
 }
 .freet {
-  border: 1px solid #111;
+  border: 1px solid rgb(185, 185, 185);
   padding: 20px;
   position: relative;
+  width: 50%;
+  border-radius: 2%;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.freet-info {
+  display: flex;
+  justify-content: space-between;
+  justify-items: flex-start;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropbtn {
+  background-color: transparent;
+  color: white;
+  /* padding: 16px; */
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown:hover .dropdown-content {
+  display: flex;
+}
+.dropdown-option {
+  background-color: white;
+  color: black;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+.dropdown-option:hover {
+  background-color: #a5dfb1;
+}
+
+.dropdown-content {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  border: none;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 </style>
