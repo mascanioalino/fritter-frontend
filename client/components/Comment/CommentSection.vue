@@ -1,28 +1,30 @@
 <template>
-  <div class="comment">
-    <button @click="toggle">Comment</button>
+  <div>
+    <button @click="toggle">
+      <img :src="require('@/public/assets/Comment.svg')" />
+    </button>
     <div class="comments" v-if="this.open">
-      <Comment v-for="comment in comments" :comment="comment"/>
+      <Comment v-for="comment in comments" :comment="comment" />
       <!-- <CreateCommentForm/> -->
     </div>
   </div>
 </template>
 
 <script>
-import Comment from '@/components/Comment/Comment.vue';
-import CreateCommentForm from '@/components/Comment/CreateCommentForm.vue';
+import Comment from "@/components/Comment/Comment.vue";
+import CreateCommentForm from "@/components/Comment/CreateCommentForm.vue";
 export default {
   name: "CommentSection",
-  components: {Comment, CreateCommentForm},
+  components: { Comment, CreateCommentForm },
   props: {
     parentId: {
       type: String,
       required: true,
     },
     post: {
-        type: String,
-        required: true
-      }
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -36,7 +38,10 @@ export default {
   },
   methods: {
     async fetchData() {
-      const url = this.post === 'freet' ? `/api/comments?freetId=${this.parentId}` : `/api/comments?commentId=${this.parentId}`;
+      const url =
+        this.post === "freet"
+          ? `/api/comments?freetId=${this.parentId}`
+          : `/api/comments?commentId=${this.parentId}`;
       try {
         const r = await fetch(url);
         const res = await r.json();
@@ -50,7 +55,7 @@ export default {
         setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
     },
-    toggle(){
+    toggle() {
       this.open = !this.open;
     },
     like() {
@@ -102,10 +107,9 @@ export default {
 </script>
 
 <style scoped>
-.comment {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+button {
+  background-color: transparent;
+  border: 0;
 }
 .comments {
   display: flex;
