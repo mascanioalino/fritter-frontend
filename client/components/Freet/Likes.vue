@@ -1,13 +1,20 @@
 <template>
   <div>
     <div class="like">
-      <button v-if="this.likes.liked" @click="deleteLike">Dislike</button>
-      <button v-else @click="like">Like</button>
+      <button v-if="this.likes.liked" @click="deleteLike">
+        <img :src="require('@/public/assets/Liked.svg')" />
+
+      </button>
+      <button v-else @click="like">
+        <img :src="require('@/public/assets/Like.svg')" />
+      </button>
       <p>{{ this.likes.public_likes }}</p>
       <button v-if="this.likes.hidden_liked" @click="deleteLike">
-        Dishiddenlike
+        <img :src="require('@/public/assets/Hidden Liked.svg')" />
       </button>
-      <button v-else @click="hiddenLike">Hidden Like</button>
+      <button v-else @click="hiddenLike">
+        <img :src="require('@/public/assets/Hidden Like.svg')" />
+      </button>
       <p>{{ this.likes.hidden_likes }}</p>
     </div>
     <section class="alerts">
@@ -38,7 +45,7 @@ export default {
     }; // Displays success/error messages encountered during freet modification
   },
   mounted() {
-  this.fetchData();
+    this.fetchData();
   },
   methods: {
     async fetchData() {
@@ -57,46 +64,46 @@ export default {
       }
     },
     deleteLike() {
-        const url = `/api/likes`;
-        const params = {
-            method: "DELETE",
-            message: "Successfully disliked freet!",
-            body: JSON.stringify({freetId: this.freetId}),
-            url: url,
-            callback: () => {
-                this.$set(this.alerts, params.message, "success");
-                setTimeout(() => this.$delete(this.alerts, params.message), 3000);
-            },
-        };
-        this.request(params);
+      const url = `/api/likes`;
+      const params = {
+        method: "DELETE",
+        message: "Successfully disliked freet!",
+        body: JSON.stringify({ freetId: this.freetId }),
+        url: url,
+        callback: () => {
+          this.$set(this.alerts, params.message, "success");
+          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+        },
+      };
+      this.request(params);
     },
     like() {
-        const url = `/api/likes`;
-        const params = {
-            method: "POST",
-            message: "Successfully liked freet!",
-            body: JSON.stringify({freetId: this.freetId, hidden: false}),
-            url: url,
-            callback: () => {
-                this.$set(this.alerts, params.message, "success");
-                setTimeout(() => this.$delete(this.alerts, params.message), 3000);
-            },
-        };
-        this.request(params);
+      const url = `/api/likes`;
+      const params = {
+        method: "POST",
+        message: "Successfully liked freet!",
+        body: JSON.stringify({ freetId: this.freetId, hidden: false }),
+        url: url,
+        callback: () => {
+          this.$set(this.alerts, params.message, "success");
+          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+        },
+      };
+      this.request(params);
     },
     hiddenLike() {
-        const url = `/api/likes`;
-        const params = {
-            method: "POST",
-            message: "Successfully hidden liked freet!",
-            body: JSON.stringify({freetId: this.freetId, hidden: true}),
-            url: url,
-            callback: () => {
-                this.$set(this.alerts, params.message, "success");
-                setTimeout(() => this.$delete(this.alerts, params.message), 3000);
-            },
-        };
-        this.request(params);
+      const url = `/api/likes`;
+      const params = {
+        method: "POST",
+        message: "Successfully hidden liked freet!",
+        body: JSON.stringify({ freetId: this.freetId, hidden: true }),
+        url: url,
+        callback: () => {
+          this.$set(this.alerts, params.message, "success");
+          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+        },
+      };
+      this.request(params);
     },
     async request(params) {
       /**
@@ -141,5 +148,8 @@ export default {
 .like button {
   height: 50%;
   margin: 10px;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
 }
 </style>

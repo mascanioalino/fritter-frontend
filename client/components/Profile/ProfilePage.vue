@@ -53,7 +53,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .selection {
   display: flex;
   flex-direction: row;
