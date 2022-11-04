@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="toggle">
+    <button v-on:click="toggle">
       <img :src="require('@/public/assets/Comment.svg')" />
     </button>
     <div class="comments" v-if="this.open">
@@ -110,6 +110,7 @@ export default {
 button {
   background-color: transparent;
   border: 0;
+  cursor: pointer;
 }
 .comments {
   display: flex;

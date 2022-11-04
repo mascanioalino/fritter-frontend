@@ -70,7 +70,7 @@ export default {
     },
     async select(f) {
       await this.$set(this.selected, "folder", f);
-      await this.$refs.fetchData();
+      await this.$refs.bookmarkComponent.fetchData();
     },
   },
 };

@@ -17,6 +17,10 @@
         <button v-if="!editing" @click="startEditing">✏️ Edit</button>
         <button @click="deleteFreet">🗑️ Delete</button>
       </div>
+      <p class="info">
+        Posted at {{ freet.dateModified }}
+        <i v-if="freet.edited">(edited)</i>
+      </p>
     </header>
     <textarea
       v-if="editing"
@@ -28,12 +32,6 @@
       {{ freet.content }}
     </p>
     <div class="reactions">
-      <CommentSection
-        v-if="$store.state.username"
-        :parentId="freet._id"
-        :name="freet._id"
-        :post="'freet'"
-      />
       <Likes
         v-if="$store.state.username"
         :key="freet._id"
@@ -44,10 +42,12 @@
         :freetId="freet._id"
         v-on:bookmark="$emit('bookmark')"
       />
-      <p class="info">
-        Posted at {{ freet.dateModified }}
-        <i v-if="freet.edited">(edited)</i>
-      </p>
+      <CommentSection
+        v-if="$store.state.username"
+        :parentId="freet._id"
+        :name="freet._id"
+        :post="'freet'"
+      />
     </div>
 
     <section class="alerts">

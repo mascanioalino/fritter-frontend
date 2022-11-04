@@ -2,10 +2,17 @@
   <div>
     <div>
       <div class="dropdown">
-        <button class="dropbtn">Dropdown</button>
+        <button class="dropbtn">
+          <img
+            v-if="this.bookmarked.length"
+            :src="require('@/public/assets/Bookmarked.svg')"
+          />
+          <img v-else :src="require('@/public/assets/Bookmark.svg')" />
+        </button>
         <div class="dropdown-content">
           <button
             class="dropdown-option"
+            :class="{ chosen: checkBookmark(bookmark) }"
             v-for="bookmark in bookmarks"
             v-on:click="setFolder"
           >
@@ -27,7 +34,6 @@
 </template>
 
 <script>
-
 export default {
   name: "Bookmark",
   props: {
@@ -41,6 +47,7 @@ export default {
       alerts: {},
       bookmarks: {},
       clicked: false,
+      bookmarked: [],
     }; // Displays success/error messages encountered during freet modification
   },
   mounted() {
@@ -56,17 +63,30 @@ export default {
           throw new Error(res.error);
         }
         this.bookmarks = res;
+        this.bookmarked = [];
+        for (var bookmark of this.bookmarks) {
+          // console.log(bookmark);
+          if (bookmark.freets.includes(this.freetId)) {
+            this.bookmarked.push(bookmark.folder);
+          }
+        }
       } catch (e) {
         this.$set(this.alerts, e, "error");
         setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
+    },
+    checkBookmark(bookmark) {
+      return this.bookmarked.includes(bookmark.folder);
     },
     setFolder(event) {
       const url = `/api/bookmarks`;
       const params = {
         method: "PUT",
         message: "Successfully editted bookmark!",
-        body: JSON.stringify({ folder: event.target.innerText, freetId: this.freetId }),
+        body: JSON.stringify({
+          folder: event.target.innerText,
+          freetId: this.freetId,
+        }),
         url: url,
         callback: () => {
           this.$set(this.alerts, params.message, "success");
@@ -99,7 +119,7 @@ export default {
 
         this.fetchData();
 
-        this.$emit('bookmark');
+        this.$emit("bookmark");
       } catch (e) {
         this.$set(this.alerts, e, "error");
         setTimeout(() => this.$delete(this.alerts, e), 3000);
@@ -120,7 +140,7 @@ export default {
   margin: 10px;
 }
 .dropbtn {
-  background-color: #79c588;
+  background-color: transparent;
   color: white;
   padding: 16px;
   font-size: 16px;
@@ -153,5 +173,12 @@ export default {
 }
 .dropdown-option:hover {
   background-color: #a5dfb1;
+}
+.chosen {
+  background-color: rgb(77, 145, 89);
+}
+
+.chosen:hover {
+  background-color: rgb(77, 145, 89);
 }
 </style>
