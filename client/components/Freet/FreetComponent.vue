@@ -200,6 +200,13 @@ export default {
 </script>
 
 <style scoped>
+.author {
+  margin: 5px;
+}
+.info {
+  color: rgb(145, 143, 143);
+}
+
 button {
   background-color: transparent;
   border: 0;
@@ -234,7 +241,6 @@ button {
 .dropbtn {
   background-color: transparent;
   color: white;
-  /* padding: 16px; */
   font-size: 16px;
   border: none;
 }
