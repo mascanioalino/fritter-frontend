@@ -4,7 +4,8 @@
 <template>
   <div>
     <div v-if="this.options">
-      Post on behalf of: <SelectGroup
+      Post on behalf of:
+      <SelectGroup
         :selected="this.selected"
         :groups="this.options"
         v-on:selection="select"
@@ -91,6 +92,7 @@ export default {
           return [id, value];
         }
       });
+      console.log(entries);
 
       if (this.selected) {
         if (this.selected !== "Myself") {

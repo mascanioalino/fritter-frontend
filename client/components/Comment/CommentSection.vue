@@ -1,11 +1,15 @@
 <template>
   <div>
-    <button v-on:click="toggle">
-      <img :src="require('@/public/assets/Comment.svg')" />
-    </button>
-    <div class="comments" v-if="this.open">
-      <Comment v-for="comment in comments" :comment="comment" />
-      <!-- <CreateCommentForm/> -->
+    <div class="commentSection">
+      <CreateCommentForm
+        v-if="!this.comments.length || this.open"
+        :freetId="this.post === 'freet' ? parentId : null"
+        :commentId="this.post === 'comment' ? parentId : null"
+      />
+      <div class="comments">
+        <button v-if="this.comments.length" @click="toggle">Reply</button>
+        <Comment v-for="comment in comments" :comment="comment" />
+      </div>
     </div>
   </div>
 </template>
@@ -28,15 +32,18 @@ export default {
   },
   data() {
     return {
-      open: false,
       alerts: {},
       comments: {},
+      open: false,
     }; // Displays success/error messages encountered during freet modification
   },
   mounted() {
     this.fetchData();
   },
   methods: {
+    toggle() {
+      this.open = !this.open;
+    },
     async fetchData() {
       const url =
         this.post === "freet"
@@ -54,9 +61,6 @@ export default {
         this.$set(this.alerts, e, "error");
         setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
-    },
-    toggle() {
-      this.open = !this.open;
     },
     like() {
       const url = `/api/likes`;
@@ -107,17 +111,20 @@ export default {
 </script>
 
 <style scoped>
-button {
-  background-color: transparent;
-  border: 0;
-  cursor: pointer;
+.commentSection {
+  margin-left: 20px;
 }
+
 .comments {
   display: flex;
+  flex-direction: column;
   width: 100%;
+  align-items: flex-start;
 }
-.comment button {
+button {
   height: 50%;
-  margin: 10px;
+  margin-bottom: 10px;
+  background-color: transparent;
+  border: 0;
 }
 </style>

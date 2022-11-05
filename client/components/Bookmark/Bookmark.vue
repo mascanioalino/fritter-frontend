@@ -18,6 +18,11 @@
           >
             {{ bookmark.folder }}
           </button>
+          <button
+            v-if="!this.bookmarks.length"
+          >
+            You have no folders, you have to create one.
+          </button>
         </div>
       </div>
     </div>

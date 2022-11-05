@@ -64,14 +64,16 @@
         :freetId="freet._id"
         v-on:bookmark="$emit('bookmark')"
       />
-      <CommentSection
-        v-if="$store.state.username"
-        :parentId="freet._id"
-        :name="freet._id"
-        :post="'freet'"
-      />
+      <button v-on:click="toggle" class="commentButton">
+        <img :src="require('@/public/assets/Comment.svg')" />
+      </button>
     </div>
-
+    <CommentSection
+      v-if="$store.state.username && this.open"
+      :parentId="freet._id"
+      :name="freet._id"
+      :post="'freet'"
+    />
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -100,12 +102,16 @@ export default {
   },
   data() {
     return {
+      open: false,
       editing: false, // Whether or not this freet is in edit mode
       draft: this.freet.content, // Potentially-new content for this freet
       alerts: {}, // Displays success/error messages encountered during freet modification
     };
   },
   methods: {
+    toggle() {
+      this.open = !this.open;
+    },
     startEditing() {
       /**
        * Enables edit mode on this freet.
@@ -194,6 +200,11 @@ export default {
 </script>
 
 <style scoped>
+button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
 .reactions {
   display: flex;
   align-content: center;

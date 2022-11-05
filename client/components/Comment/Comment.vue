@@ -3,17 +3,43 @@
 
 <template>
   <article class="comment">
-    <header>
+    <header class="commentHeader">
       <h3 class="author">@{{ comment.userId }}</h3>
-      <div v-if="$store.state.username === comment.userId" class="actions">
-        <button @click="deleteComment">🗑️ Delete</button>
+      <div v-if="$store.state.username === comment.userId" class="dropdown">
+        <button class="dropbtn">
+          <img :src="require('@/public/assets/Three Dots.svg')" />
+        </button>
+        <div class="dropdown-content">
+          <button class="dropdown-option" @click="deleteComment">
+            🗑️ Delete
+          </button>
+        </div>
       </div>
+      <div
+        v-if="$store.state.username === comment.userId"
+        class="actions"
+      ></div>
     </header>
 
-    <p class="content">
-      {{ comment.content }}
-    </p>
+    <div class="commentContent">
+      <p class="content">
+        {{ comment.content }}
+      </p>
+      <button v-on:click="toggle" class="commentButton">
+        <img
+          style="
+             {
+              height: 20px;
+              width: 20px;
+            }
+          "
+          :src="require('@/public/assets/Comment.svg')"
+        />
+      </button>
+    </div>
+
     <CommentSection
+      v-if="this.open"
       :parentId="comment._id"
       :name="comment._id"
       :post="'comment'"
@@ -50,10 +76,14 @@ export default {
   },
   data() {
     return {
+      open: false,
       alerts: {}, // Displays success/error messages encountered during freet modification
     };
   },
   methods: {
+    toggle() {
+      this.open = !this.open;
+    },
     deleteComment() {
       /**
        * Deletes this freet.
@@ -85,7 +115,7 @@ export default {
       }
 
       try {
-        const r = await fetch(`/api/freets/${this.freet._id}`, options);
+        const r = await fetch(`/api/comments/${this.comment._id}`, options);
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
@@ -105,10 +135,74 @@ export default {
 </script>
 
 <style scoped>
+.commentContent {
+  display: flex;
+}
+button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
 .comment {
-  border: 1px solid #111;
-  padding: 20px;
+  border-top: 0.5px solid rgb(185, 185, 185);
+
+  /* padding: 20px; */
   position: relative;
-  width:100%;
+  width: 100%;
+}
+.content {
+  margin-left: 20px;
+  flex-grow: 5;
+}
+
+.author {
+  margin-top: 10px;
+  padding: 0;
+  justify-self: flex-start;
+  flex-grow: 5;
+}
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropbtn {
+  background-color: transparent;
+  color: white;
+  /* padding: 16px; */
+  font-size: 16px;
+  border: none;
+  justify-self: flex-end;
+}
+
+.dropdown:hover .dropdown-content {
+  display: flex;
+}
+.dropdown-option {
+  background-color: white;
+  color: black;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+.dropdown-option:hover {
+  background-color: #a5dfb1;
+}
+
+.dropdown-content {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  border: none;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 </style>
