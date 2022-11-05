@@ -91,6 +91,7 @@ export default {
       const params = {
         method: "DELETE",
         callback: () => {
+          this.$emit("update");
           this.$store.commit("alert", {
             message: "Successfully deleted freet!",
             status: "success",

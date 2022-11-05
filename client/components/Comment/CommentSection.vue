@@ -2,13 +2,14 @@
   <div>
     <div class="commentSection">
       <CreateCommentForm
+      v-on:update="fetchData"
         v-if="!this.comments.length || this.open"
         :freetId="this.post === 'freet' ? parentId : null"
         :commentId="this.post === 'comment' ? parentId : null"
       />
       <div class="comments">
         <button v-if="this.comments.length" @click="toggle">Reply</button>
-        <Comment v-for="comment in comments" :comment="comment" />
+        <Comment v-on:update="fetchData" v-for="comment in comments" :comment="comment" />
       </div>
     </div>
   </div>
