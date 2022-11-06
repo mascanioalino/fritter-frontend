@@ -31,7 +31,7 @@
           />
         </div>
       </header>
-      <section v-if="$store.state.freets.length">
+      <section class="freets" v-if="$store.state.freets.length">
         <FreetComponent
           v-for="freet in $store.state.freets"
           :key="freet.id"
@@ -87,5 +87,8 @@ section .scrollbox {
   width: 60%;
   padding-bottom: 40px;
   margin-bottom: 40px;
+}
+.freets {
+  width: 60%;
 }
 </style>
