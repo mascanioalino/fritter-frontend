@@ -4,93 +4,89 @@
 
 <template>
   <nav>
-    <div class="left">
-      <img src="../../public/logo.svg">
-      <h1 class="title">
-        Fritter
-      </h1>
+    <div class="vertical">
+      <div class="top">
+        <img src="../../public/logo.svg" />
+        <h1 class="title">Fritter</h1>
+      </div>
+      <div class="right">
+        <div class="link">
+          <img :src="require('@/public/assets/Home.svg')" />
+          <router-link to="/">Home </router-link>
+        </div>
+        <div class="link">
+          <img :src="require('@/public/assets/Bookmarked.svg')" />
+          <router-link v-if="$store.state.username" to="/bookmark">
+            Bookmarks
+          </router-link>
+        </div>
+        <div class="link">
+          <img :src="require('@/public/assets/Person.svg')" />
+          <router-link v-if="$store.state.username" to="/profile">
+            Profile
+          </router-link>
+          <router-link v-else to="/login"> Login </router-link>
+        </div>
+      </div>
+      <section class="alerts">
+        <article
+          v-for="(status, alert, index) in $store.state.alerts"
+          :key="index"
+          :class="status"
+        >
+          <p>{{ alert }}</p>
+        </article>
+      </section>
     </div>
-    <div class="right">
-      <router-link to="/">
-        Home
-      </router-link>
-      <router-link
-        v-if="$store.state.username"
-        to="/bookmark"
-      >
-        Bookmarks
-      </router-link>
-      <router-link
-        v-if="$store.state.username"
-        to="/profile"
-      >
-        Profile
-      </router-link>
-      <!-- <router-link
-        v-if="$store.state.username"
-        to="/account"
-      >
-        Account
-      </router-link> -->
-      <router-link
-        v-else
-        to="/login"
-      >
-        Login
-      </router-link>
-    </div>
-    <section class="alerts">
-      <article
-        v-for="(status, alert, index) in $store.state.alerts"
-        :key="index"
-        :class="status"
-      >
-        <p>{{ alert }}</p>
-      </article>
-    </section>
   </nav>
 </template>
 
 <style scoped>
 nav {
-    padding: 1vw 2vw;
-    background-color: #ccc;
-    display: flex;
-    /* flex-direction: column; */
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    /* height: 100%;
-    width: 10%; */
+  padding: 1vw 2vw;
+  background-color: #ccc;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  /* width: 15%; */
 }
 
 .title {
-    font-size: 32px;
-    margin: 0 5px;
+  font-size: 32px;
+  margin: 0 5px;
 }
 
 img {
-    height: 32px;
+  height: 32px;
 }
 
-.left {
-	display: flex;
-	align-items: center;
+.top {
+  display: flex;
+  align-items: center;
 }
 
 .right {
-    font-size: 20px;
-    display: grid;
-    gap: 16px;
-    grid-auto-flow: column;
-    align-items: center;
-}
-
-.right a {
-    margin-left: 5px;
+  font-size: 20px;
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
 }
 
 .alerts {
-    width: 25%;
+  width: 25%;
+}
+
+.vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
+}
+.link {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  text-size-adjust: auto;
 }
 </style>

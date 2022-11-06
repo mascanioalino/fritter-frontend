@@ -84,11 +84,11 @@ section .scrollbox {
 
 .createFreet {
   border-bottom: 1px solid black;
-  width: 60%;
+  /* width: 60%; */
   padding-bottom: 40px;
   margin-bottom: 40px;
 }
 .freets {
-  width: 60%;
+  /* width: 60%; */
 }
 </style>
