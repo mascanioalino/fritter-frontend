@@ -36,6 +36,7 @@
           v-for="freet in $store.state.freets"
           :key="freet.id"
           :freet="freet"
+          v-on:change="this.$refs.getFreetsForm.submit()"
         />
       </section>
       <article v-else>
@@ -84,11 +85,7 @@ section .scrollbox {
 
 .createFreet {
   border-bottom: 1px solid black;
-  /* width: 60%; */
   padding-bottom: 40px;
   margin-bottom: 40px;
-}
-.freets {
-  /* width: 60%; */
 }
 </style>

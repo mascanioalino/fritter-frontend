@@ -1,7 +1,18 @@
 <template>
   <div class="horizontal" id="app">
     <NavBar class="nav" />
-    <router-view class="page" />
+    <div class="page">
+      <section class="alerts">
+        <article
+          v-for="(status, alert, index) in $store.state.alerts"
+          :key="index"
+          :class="status"
+        >
+          <p>{{ alert }}</p>
+        </article>
+      </section>
+      <router-view  />
+    </div>
   </div>
 </template>
 
@@ -51,12 +62,12 @@ main {
 }
 
 .alerts {
-  position: absolute;
-  z-index: 99;
+  position: relative;
+  /* z-index: 99;
   bottom: 0;
   top: 100%;
   left: 50%;
-  transform: translate(-50%, 10%);
+  transform: translate(-50%, 10%); */
   width: 100%;
   text-align: center;
 }

@@ -16,7 +16,7 @@
     <article v-else>
       <p>{{ content }}</p>
     </article>
-    <div class="postFreet">
+    <section class="postFreet">
       <div style="display: flex; align-items: center">
         Post on behalf of:
         <SelectGroup
@@ -28,7 +28,7 @@
       <button class="postButton" @click="submit">
         {{ title }}
       </button>
-    </div>
+    </section>
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -50,6 +50,7 @@ export default {
   components: { SelectGroup },
   data() {
     return {
+      alerts: {},
       url: "/api/freets",
       method: "POST",
       hasBody: true,
@@ -139,6 +140,8 @@ export default {
         }
       } catch (e) {
         this.$set(this.alerts, e, "error");
+        console.log(this.alerts);
+
         setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
     },

@@ -28,15 +28,7 @@
           <router-link v-else to="/login"> Login </router-link>
         </div>
       </div>
-      <section class="alerts">
-        <article
-          v-for="(status, alert, index) in $store.state.alerts"
-          :key="index"
-          :class="status"
-        >
-          <p>{{ alert }}</p>
-        </article>
-      </section>
+      
     </div>
   </nav>
 </template>

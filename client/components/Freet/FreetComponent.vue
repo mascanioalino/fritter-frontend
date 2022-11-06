@@ -188,6 +188,7 @@ export default {
 
         this.editing = false;
         this.$store.commit("refreshFreets");
+        this.$emit("deletion");
 
         params.callback();
       } catch (e) {

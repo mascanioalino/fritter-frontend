@@ -93,7 +93,7 @@ export default {
         callback: () => {
           this.$emit("update");
           this.$store.commit("alert", {
-            message: "Successfully deleted freet!",
+            message: "Successfully deleted comment!",
             status: "success",
           });
         },
