@@ -12,18 +12,36 @@
       <div class="right">
         <div class="link">
           <img :src="require('@/public/assets/Home.svg')" />
-          <router-link to="/">Home </router-link>
+          <router-link
+            to="/"
+            class="router-link"
+            :class="{ selected: this.$store.state.selected === 'home' }"
+            >Home
+          </router-link>
         </div>
         <div class="link" v-if="$store.state.username">
           <img :src="require('@/public/assets/Bookmarked.svg')" />
-          <router-link to="/bookmark"> Bookmarks </router-link>
+          <router-link
+            class="router-link"
+            :class="{ selected: this.$store.state.selected === 'bookmark' }"
+            to="/bookmark"
+          >
+            Bookmarks
+          </router-link>
         </div>
         <div class="link">
           <img :src="require('@/public/assets/Person.svg')" />
-          <router-link v-if="$store.state.username" to="/profile">
+          <router-link
+            class="router-link"
+            :class="{ selected: this.$store.state.selected === 'profile' }"
+            v-if="$store.state.username"
+            to="/profile"
+          >
             Profile
           </router-link>
-          <router-link v-else to="/login"> Login </router-link>
+          <router-link v-else class="router-link" to="/login">
+            Login
+          </router-link>
         </div>
       </div>
       <button @click="toggle">Freet</button>
@@ -101,6 +119,16 @@ img {
   align-items: center;
   gap: 10px;
   text-size-adjust: auto;
+  font-style: normal;
+  font-weight: 400;
+}
+.router-link {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+.router-link.selected {
+  font-weight: 600;
 }
 button {
   border-radius: 50px;
