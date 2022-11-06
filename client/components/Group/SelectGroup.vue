@@ -58,11 +58,14 @@ export default {
 .dropbtn {
   background-color: #79c588;
   color: white;
-  padding: 16px;
   font-size: 16px;
   border: none;
+  border-radius: 10%;
+  height: 50%;
+  padding: 5px;
 }
 .dropdown {
+  margin-left: 10px;
   position: relative;
   display: inline-block;
 }
@@ -72,7 +75,7 @@ export default {
   position: absolute;
   border: none;
   background-color: #f9f9f9;
-  min-width: 160px;
+  min-width: min-content;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
@@ -82,8 +85,8 @@ export default {
 .dropdown-option {
   background-color: white;
   color: black;
-  padding: 16px;
   font-size: 16px;
+  padding: 10px;
   border: none;
   cursor: pointer;
 }

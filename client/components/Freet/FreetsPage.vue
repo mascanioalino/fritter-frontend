@@ -6,7 +6,7 @@
       <header>
         <h2>Welcome @{{ $store.state.username }}</h2>
       </header>
-      <CreateFreetForm />
+      <CreateFreetForm class="createFreet" />
     </section>
     <section v-else>
       <header>
@@ -14,25 +14,16 @@
       </header>
       <article>
         <h3>
-          <router-link to="/login">
-            Sign in
-          </router-link>
+          <router-link to="/login"> Sign in </router-link>
           to create, edit, and delete freets.
         </h3>
       </article>
     </section>
     <section>
       <header>
-        <div class="left">
-          <h2>
-            Viewing all freets
-            <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
-            </span>
-          </h2>
-        </div>
         <div class="right">
           <GetFreetsForm
+            style="display: none"
             ref="getFreetsForm"
             value="author"
             placeholder="🔍 Filter by author (optional)"
@@ -40,18 +31,14 @@
           />
         </div>
       </header>
-      <section
-        v-if="$store.state.freets.length"
-      >
+      <section v-if="$store.state.freets.length">
         <FreetComponent
           v-for="freet in $store.state.freets"
           :key="freet.id"
           :freet="freet"
         />
       </section>
-      <article
-        v-else
-      >
+      <article v-else>
         <h3>No freets found.</h3>
       </article>
     </section>
@@ -59,16 +46,16 @@
 </template>
 
 <script>
-import FreetComponent from '@/components/Freet/FreetComponent.vue';
-import CreateFreetForm from '@/components/Freet/CreateFreetForm.vue';
-import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
+import FreetComponent from "@/components/Freet/FreetComponent.vue";
+import CreateFreetForm from "@/components/Freet/CreateFreetForm.vue";
+import GetFreetsForm from "@/components/Freet/GetFreetsForm.vue";
 
 export default {
-  name: 'FreetPage',
-  components: {FreetComponent, GetFreetsForm, CreateFreetForm},
+  name: "FreetPage",
+  components: { FreetComponent, GetFreetsForm, CreateFreetForm },
   mounted() {
     this.$refs.getFreetsForm.submit();
-  }
+  },
 };
 </script>
 
@@ -78,19 +65,27 @@ section {
   flex-direction: column;
 }
 
-header, header > * {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+header,
+header > * {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 button {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 section .scrollbox {
   flex: 1 0 50vh;
   padding: 3%;
   overflow-y: scroll;
+}
+
+.createFreet {
+  border-bottom: 1px solid black;
+  width: 60%;
+  padding-bottom: 40px;
+  margin-bottom: 40px;
 }
 </style>

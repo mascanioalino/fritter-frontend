@@ -3,14 +3,6 @@
 
 <template>
   <div>
-    <div v-if="this.options">
-      Post on behalf of:
-      <SelectGroup
-        :selected="this.selected"
-        :groups="this.options"
-        v-on:selection="select"
-      />
-    </div>
     <form @submit.prevent="submit">
       <h3>{{ title }}</h3>
       <article v-if="fields.length">
@@ -51,12 +43,8 @@
 </template>
 
 <script>
-import SelectGroup from "@/components/Group/SelectGroup.vue";
 export default {
   name: "BlockForm",
-  components: {
-    SelectGroup,
-  },
   data() {
     /**
      * Options for submitting this form.
@@ -73,9 +61,7 @@ export default {
     };
   },
   methods: {
-    select(x) {
-      this.selected = x;
-    },
+
     async submit() {
       /**
        * Submits a form with the specified options from data().

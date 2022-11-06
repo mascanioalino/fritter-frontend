@@ -221,7 +221,7 @@ button {
   border: 1px solid rgb(185, 185, 185);
   padding: 20px;
   position: relative;
-  width: 50%;
+  width: 60%;
   border-radius: 2%;
 }
 
