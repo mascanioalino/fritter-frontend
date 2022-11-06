@@ -8,48 +8,53 @@
         <h2>&{{ this.group.groupName }}</h2>
       </header>
       <!-- <button v-if="!this.username" onClick="location.href='/#/account'">Settings</button> -->
-      <button @click="showMembers = true">Members</button>
-      <MembersModal
-        v-if="showMembers"
-        :group="this.group"
-        @close="showMembers = false"
-        :admin="false"
-        v-on:update="(res) => updateMembers(res)"
-      />
-      <button
-        v-if="
-          !this.group.members.includes($store.state.username) &&
-          !this.group.requests.includes($store.state.username)
-        "
-        v-on:click="requestJoin"
-      >
-        Request to join
-      </button>
-      <button
-        v-else-if="this.group.requests.includes($store.state.username)"
-        v-on:click="requestJoin"
-      >
-        Remove Request
-      </button>
-      <button
-        v-if="this.group.admins.includes($store.state.username)"
-        @click="showRequests = true"
-      >
-        Requests
-      </button>
-      <MembersModal
-        v-if="showRequests"
-        :group="this.group"
-        @close="showRequests = false"
-        :admin="true"
-        v-on:update="(res) => updateRequests(res)"
-      />
-      <button
-        v-if="this.group.members.includes($store.state.username) && (this.group.owner!==$store.state.username)"
-        @click="leaveGroup"
-      >
-        Leave group
-      </button>
+      <div class="buttons">
+        <button @click="showMembers = true">Members</button>
+        <MembersModal
+          v-if="showMembers"
+          :group="this.group"
+          @close="showMembers = false"
+          :admin="false"
+          v-on:update="(res) => updateMembers(res)"
+        />
+        <button
+          v-if="
+            !this.group.members.includes($store.state.username) &&
+            !this.group.requests.includes($store.state.username)
+          "
+          v-on:click="requestJoin"
+        >
+          Request to join
+        </button>
+        <button
+          v-else-if="this.group.requests.includes($store.state.username)"
+          v-on:click="requestJoin"
+        >
+          Remove Request
+        </button>
+        <button
+          v-if="this.group.admins.includes($store.state.username)"
+          @click="showRequests = true"
+        >
+          Requests
+        </button>
+        <MembersModal
+          v-if="showRequests"
+          :group="this.group"
+          @close="showRequests = false"
+          :admin="true"
+          v-on:update="(res) => updateRequests(res)"
+        />
+        <button
+          v-if="
+            this.group.members.includes($store.state.username) &&
+            this.group.owner !== $store.state.username
+          "
+          @click="leaveGroup"
+        >
+          Leave group
+        </button>
+      </div>
       <h3>Owner: {{ this.group.owner }}</h3>
       <div class="selection">
         <button class="selected">Freets</button>
@@ -121,7 +126,7 @@ export default {
           });
         },
       };
-      this.$emit('deletion');
+      this.$emit("deletion");
       this.request(params);
     },
     async request(params) {
@@ -177,5 +182,20 @@ export default {
 }
 .selection .selected {
   background-color: #79c588;
+}
+button {
+  background-color: rgb(185, 185, 185);
+  border-radius: 10%;
+  height:inherit;
+  width: 80px;
+  border: 0;
+  margin-right: 5px;
+  cursor: pointer;
+  padding: 5px;
+}
+.buttons {
+  display: flex;
+  align-items: center;
+  height: min-content;
 }
 </style>

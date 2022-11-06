@@ -14,11 +14,9 @@
           <img :src="require('@/public/assets/Home.svg')" />
           <router-link to="/">Home </router-link>
         </div>
-        <div class="link">
+        <div class="link" v-if="$store.state.username">
           <img :src="require('@/public/assets/Bookmarked.svg')" />
-          <router-link v-if="$store.state.username" to="/bookmark">
-            Bookmarks
-          </router-link>
+          <router-link to="/bookmark"> Bookmarks </router-link>
         </div>
         <div class="link">
           <img :src="require('@/public/assets/Person.svg')" />
@@ -28,7 +26,6 @@
           <router-link v-else to="/login"> Login </router-link>
         </div>
       </div>
-      
     </div>
   </nav>
 </template>
@@ -73,6 +70,7 @@ img {
   flex-direction: column;
   justify-content: flex-start;
   gap: 20px;
+  position: fixed;
 }
 .link {
   display: flex;

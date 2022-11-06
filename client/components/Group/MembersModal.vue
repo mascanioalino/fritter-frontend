@@ -4,8 +4,10 @@
       <div v-if="this.admin" class="modal-container">
         <div class="modal-header">
           <h3>Requests</h3>
+          <button @click="$emit('close')">
+            <img :src="require('@/public/assets/Close.svg')" />
+          </button>
         </div>
-
         <div class="modal-body">
           <div class="names" v-for="req in requests">
             <h3 class="author">
@@ -15,16 +17,22 @@
               <a v-else :href="`/#/${req}`">@{{ req }}</a>
             </h3>
             <div>
-              <button v-on:click="respond(req, true)">Accept</button>
-              <button v-on:click="respond(req, false)">Reject</button>
+              <button v-on:click="respond(req, true)">
+                <img :src="require('@/public/assets/Check.svg')" />
+              </button>
+              <button v-on:click="respond(req, false)">
+                <img :src="require('@/public/assets/Close.svg')" />
+              </button>
             </div>
           </div>
         </div>
-        <button class="modal-default-button" @click="$emit('close')">OK</button>
       </div>
       <div v-else class="modal-container">
         <div class="modal-header">
           <h3>Members</h3>
+          <button @click="$emit('close')">
+            <img :src="require('@/public/assets/Close.svg')" />
+          </button>
         </div>
 
         <div class="modal-body">
@@ -35,28 +43,43 @@
               >
               <a v-else :href="`/#/${member}`">@{{ member }}</a>
             </h3>
+
             <div>
               <p v-if="admins.includes(member)">Admin</p>
-              <button
-                v-else-if="admins.includes($store.state.username)"
-                v-on:click="makeAdmin(member)"
-              >
-                Make Admin
-              </button>
-              <button
+              <div
                 v-if="
-                  owner === $store.state.username &&
-                  member !== $store.state.username
+                  member !== $store.state.username &&
+                  ((admins.includes($store.state.username) &&
+                    !admins.includes(member)) ||
+                    owner === $store.state.username)
                 "
-                v-on:click="makeOwner(member)"
+                class="dropdown"
               >
-                Make Owner
-              </button>
+                <button class="dropbtn">
+                  <img :src="require('@/public/assets/Three Dots.svg')" />
+                </button>
+                <div class="dropdown-content">
+                  <button
+                    class="dropdown-option"
+                    v-if="!admins.includes(member)"
+                    v-on:click="makeAdmin(member)"
+                  >
+                    Make Admin
+                  </button>
+                  <button
+                    class="dropdown-option"
+                    v-if="
+                      owner === $store.state.username &&
+                      member !== $store.state.username
+                    "
+                    v-on:click="makeOwner(member)"
+                  >
+                    Make Owner
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-          <button class="modal-default-button" @click="$emit('close')">
-            OK
-          </button>
         </div>
       </div>
     </div>
@@ -209,7 +232,7 @@ export default {
 .modal-container {
   width: 500px;
   margin: 0px auto;
-  padding: 30px 30px;
+  padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
@@ -217,6 +240,10 @@ export default {
   font-family: Helvetica, Arial, sans-serif;
 }
 
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+}
 .modal-header h3 {
   margin-top: 0;
   color: #42b983;
@@ -225,19 +252,6 @@ export default {
 .modal-body {
   margin: 20px 0;
 }
-
-.modal-default-button {
-  float: right;
-}
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
 
 .modal-enter {
   opacity: 0;
@@ -251,5 +265,19 @@ export default {
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+/* .modal-default-button {
+  background-color: rgb(185, 185, 185);
+  border-radius: 10%;
+  border: 0;
+  cursor: pointer;
+  float: right;
+  padding: 5px 10px;
+} */
+
+button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
 }
 </style>

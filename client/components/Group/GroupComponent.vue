@@ -4,22 +4,21 @@
 <template>
   <article v-if="selected.group">
     <div
-      :class="
-        selected.group.groupName === group.groupName
-          ? 'group-selected'
-          : 'group'
-      "
+      class="group"
+      :class="selected.group.groupName === group.groupName ? 'selected' : ''"
     >
       <div class="groupName" v-on:click="select">
         {{ group.groupName }}
       </div>
-      <div>
-        <button
-          v-if="this.group.owner === $store.state.username"
-          v-on:click="deleteGroup"
-        >
-          Delete
+      <div class="dropdown" v-if="this.group.owner === $store.state.username">
+        <button class="dropbtn">
+          <img :src="require('@/public/assets/Three Dots.svg')" />
         </button>
+        <div class="dropdown-content">
+          <button class="dropdown-option" @click="deleteGroup">
+            🗑️ Delete
+          </button>
+        </div>
       </div>
     </div>
     <section class="alerts">
@@ -112,22 +111,17 @@ export default {
   height: 80px;
   flex-grow: 9;
   padding: 30px;
+  border: 0;
 }
 .group {
-  border: 1px solid #111;
+  border-top: 1px solid rgb(185, 185, 185);
   padding-right: 5px;
   position: relative;
   display: flex;
   align-items: center;
   cursor: pointer;
 }
-.group-selected {
-  border: 1px solid #111;
-  padding-right: 5px;
-  position: relative;
+.group.selected {
   border-right: 4px solid #a5dfb1;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
 }
 </style>

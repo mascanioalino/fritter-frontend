@@ -11,7 +11,7 @@
           <p>{{ alert }}</p>
         </article>
       </section>
-      <router-view  />
+      <router-view />
     </div>
   </div>
 </template>
@@ -54,20 +54,15 @@ body {
 }
 .page {
   width: 60%;
-  padding-left: 1%;
+  padding-left: 0;
 }
 
 main {
-  padding: 0 5em 5em;
+  padding: 0 1em 1em;
 }
 
 .alerts {
   position: relative;
-  /* z-index: 99;
-  bottom: 0;
-  top: 100%;
-  left: 50%;
-  transform: translate(-50%, 10%); */
   width: 100%;
   text-align: center;
 }
@@ -95,5 +90,43 @@ main {
 }
 .nav {
   width: 15%;
+  height: 100vmax;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropbtn {
+  background-color: transparent;
+  color: white;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown:hover .dropdown-content {
+  display: flex;
+}
+.dropdown-option {
+  background-color: white;
+  color: black;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+.dropdown-option:hover {
+  background-color: #a5dfb1;
+}
+
+.dropdown-content {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  border: none;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 </style>

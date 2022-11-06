@@ -1,41 +1,39 @@
 <template>
   <main>
-    <section v-if="$store.state.username">
-      <section class="bookmarks">
-        <div class="folders">
-          <div class="title">
-            <h1>Bookmarks</h1>
-            <button @click="toggle">
-              <img
-                style="width: 40px; height: 40px"
-                :src="require('@/public/assets/Plus.svg')"
-              />
-            </button>
-          </div>
-          <h3 style="margin: 5px; color: rgb(100, 100, 100)">
-            @{{ $store.state.username }}
-          </h3>
-          <CreateFolder
-            v-if="this.open"
-            class="createFolder"
-            v-on:creation="fetchData"
-          />
-          <FolderComponent
-            v-on:selection="select"
-            v-on:deletion="fetchData"
-            v-for="bookmark in bookmarks"
-            :key="bookmark._id"
-            :bookmark="bookmark"
-            :selected="selected"
-          />
+    <section v-if="$store.state.username" class="bookmarks">
+      <div class="folders">
+        <div class="title">
+          <h1>Bookmarks</h1>
+          <button @click="toggle">
+            <img
+              style="width: 40px; height: 40px"
+              :src="require('@/public/assets/Plus.svg')"
+            />
+          </button>
         </div>
-        <BookmarkComponent
-          class="freets"
-          v-if="selected.folder"
-          ref="bookmarkComponent"
+        <h3 style="margin: 5px; color: rgb(100, 100, 100)">
+          @{{ $store.state.username }}
+        </h3>
+        <CreateFolder
+          v-if="this.open"
+          class="createFolder"
+          v-on:creation="fetchData"
+        />
+        <FolderComponent
+          v-on:selection="select"
+          v-on:deletion="fetchData"
+          v-for="bookmark in bookmarks"
+          :key="bookmark._id"
+          :bookmark="bookmark"
           :selected="selected"
         />
-      </section>
+      </div>
+      <BookmarkComponent
+        class="freets"
+        v-if="selected.folder"
+        ref="bookmarkComponent"
+        :selected="selected"
+      />
     </section>
     <section v-else>
       <header>
@@ -111,7 +109,7 @@ export default {
   margin-right: 20px;
   display: flex;
   flex-direction: column;
-  height: 100vmax
+  height: 100vmax;
 }
 section {
   display: flex;

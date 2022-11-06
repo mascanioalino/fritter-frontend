@@ -1,12 +1,25 @@
 <template>
   <main>
-    <section v-if="$store.state.username">
-      <header>
-        <h1>Groups</h1>
-        <h3>@{{ this.username ? this.username : $store.state.username }}</h3>
-      </header>
-      <CreateGroup v-on:creation="fetchData" />
-      <section class="groups">
+    <section v-if="$store.state.username" class="groupPage">
+      <div class="groups">
+        <div class="title">
+          <h1>Groups</h1>
+          <button @click="toggle">
+            <img
+              style="width: 40px; height: 40px"
+              :src="require('@/public/assets/Plus.svg')"
+            />
+          </button>
+        </div>
+
+        <h3 style="margin: 5px; color: rgb(100, 100, 100)">
+          @{{ this.username ? this.username : $store.state.username }}
+        </h3>
+        <CreateGroup
+          v-if="this.open"
+          v-on:creation="fetchData"
+          class="createGroup"
+        />
         <div class="group">
           <GroupComponent
             v-on:selection="select"
@@ -18,15 +31,18 @@
             ref="groupComponent"
           />
         </div>
-        <GroupProfile
-          v-if="selected.group"
-          ref="groupProfile"
-          :group="selected.group"
-          v-on:update="(g) => this.update(g)"
-          v-on:deletion="fetchData"
-        />
-      </section>
+      </div>
+
+      <GroupProfile
+        v-if="selected.group"
+        class="freets"
+        ref="groupProfile"
+        :group="selected.group"
+        v-on:update="(g) => this.update(g)"
+        v-on:deletion="fetchData"
+      />
     </section>
+    <!-- </section> -->
     <section v-else>
       <header>
         <h2>Welcome to Fritter!</h2>
@@ -56,12 +72,15 @@ export default {
   },
   components: { GroupComponent, CreateGroup, GroupProfile },
   data() {
-    return { alerts: {}, groups: {}, selected: {} };
+    return { alerts: {}, groups: {}, selected: {}, open: false };
   },
   mounted() {
     this.fetchData();
   },
   methods: {
+    toggle() {
+      this.open = !this.open;
+    },
     async update(g) {
       this.fetchData().then(this.select(g));
     },
@@ -95,12 +114,18 @@ export default {
 </script>
 
 <style scoped>
-.groups {
+.groupPage {
   flex-direction: row;
 }
-.group {
+.groups {
   width: 33%;
+  border-right: 1px solid;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vmax;
 }
+
 section {
   display: flex;
   flex-direction: column;
@@ -122,5 +147,23 @@ section .scrollbox {
   flex: 1 0 50vh;
   padding: 3%;
   overflow-y: scroll;
+}
+.title {
+  display: flex;
+  justify-content: space-between;
+}
+.title button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.freets {
+  width: 70%;
+}
+.createGroup {
+  width: 90%;
+  align-self: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 </style>
