@@ -56,7 +56,7 @@ export default {
 
 <style scoped>
 .freets {
-  width: 66%
+  width: 100%
 }
 p {
     margin-left:10px;

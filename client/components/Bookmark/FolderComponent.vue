@@ -4,15 +4,21 @@
 <template>
   <article>
     <div
-      :class="
-        selected.folder === bookmark.folder ? 'folder-selected' : 'folder'
-      "
+      class="folder"
+      :class="selected.folder === bookmark.folder ? 'selected' : ''"
     >
       <div class="folderName" v-on:click="select">
         {{ bookmark.folder }}
       </div>
-      <div>
-        <button v-on:click="deleteFolder">Delete</button>
+      <div class="dropdown">
+        <button class="dropbtn">
+          <img :src="require('@/public/assets/Three Dots.svg')" />
+        </button>
+        <div class="dropdown-content">
+          <button class="dropdown-option" @click="deleteFolder">
+            🗑️ Delete
+          </button>
+        </div>
       </div>
     </div>
   </article>
@@ -91,24 +97,61 @@ export default {
 .folderName {
   height: 80px;
   flex-grow: 9;
-  padding: 30px
-  ;
+  padding: 30px;
+  border: 0;
 }
 .folder {
-  border: 1px solid #111;
+  border-top: 1px solid rgb(185, 185, 185);
   padding-right: 5px;
   position: relative;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   cursor: pointer;
 }
-.folder-selected {
-  border: 1px solid #111;
+.folder.selected {
+  border-top: 1px solid rgb(185, 185, 185);
   padding-right: 5px;
   position: relative;
   border-right: 4px solid #a5dfb1;
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropbtn {
+  background-color: transparent;
+  color: white;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown:hover .dropdown-content {
+  display: flex;
+}
+.dropdown-option {
+  background-color: white;
+  color: black;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+.dropdown-option:hover {
+  background-color: #a5dfb1;
+}
+
+.dropdown-content {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  border: none;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 </style>

@@ -78,7 +78,6 @@ export default {
           return [id, value];
         }
       });
-      console.log(entries);
 
       if (this.selected) {
         if (this.selected !== "Myself") {
