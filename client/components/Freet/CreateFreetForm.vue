@@ -138,6 +138,7 @@ export default {
         if (this.callback) {
           this.callback();
         }
+        this.$emit("close");
       } catch (e) {
         this.$set(this.alerts, e, "error");
         console.log(this.alerts);

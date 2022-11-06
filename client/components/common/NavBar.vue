@@ -26,18 +26,41 @@
           <router-link v-else to="/login"> Login </router-link>
         </div>
       </div>
+      <button @click="toggle">Freet</button>
+      <CreateFreetModal v-if="this.open" v-on:close="toggle" />
     </div>
   </nav>
 </template>
 
+<script>
+import CreateFreetModal from "@/components/common/CreateFreetModal.vue";
+
+export default {
+  data() {
+    return {
+      open: false,
+    };
+  },
+  components: {
+    CreateFreetModal,
+  },
+  methods: {
+    toggle() {
+      this.open = !this.open;
+    },
+  },
+};
+</script>
+
 <style scoped>
 nav {
   padding: 1vw 2vw;
-  background-color: #ccc;
+  background-color: transparent;
   justify-content: space-between;
   align-items: center;
   position: relative;
-  /* width: 15%; */
+  border-right: 1px solid;
+  z-index: 9999;
 }
 
 .title {
@@ -78,5 +101,13 @@ img {
   align-items: center;
   gap: 10px;
   text-size-adjust: auto;
+}
+button {
+  border-radius: 50px;
+  border: 0;
+  background-color: #d9d9d9;
+  padding: 10px;
+  align-content: center;
+  cursor: pointer;
 }
 </style>

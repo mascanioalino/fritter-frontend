@@ -3,7 +3,7 @@
 <template>
   <main>
     <section v-if="$store.state.username">
-      <header>
+      <header class="pageTitle">
         <h2>Welcome @{{ $store.state.username }}</h2>
       </header>
       <CreateFreetForm class="createFreet" />

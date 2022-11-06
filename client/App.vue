@@ -59,6 +59,7 @@ body {
 
 main {
   padding: 0 1em 1em;
+  font-family: "Inter", sans-serif;
 }
 
 .alerts {
@@ -91,6 +92,7 @@ main {
 .nav {
   width: 15%;
   height: 100vmax;
+  font-family: "Inter", sans-serif;
 }
 
 .dropdown {
@@ -129,4 +131,64 @@ main {
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
+
+.pageTitle {
+  font-style: normal;
+  font-weight: 800;
+}
+.modal-mask {
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  width: 500px;
+  margin: 0px auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: "Inter", sans-serif;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+}
+.modal-header h3 {
+  margin-top: 0;
+  color: #42b983;
+}
+
+.modal-body {
+  margin: 20px 0;
+}
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap");
 </style>
