@@ -50,6 +50,8 @@ router.beforeEach((to, from, next) => {
       router.app.$store.commit("selectPage", "home");
     } else if (to.name === "Profile") {
       router.app.$store.commit("selectPage", "profile");
+    } else if (to.name === "Login") {
+      router.app.$store.commit("selectPage", "login");
     }
   }
 

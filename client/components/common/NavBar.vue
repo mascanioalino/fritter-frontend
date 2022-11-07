@@ -39,7 +39,12 @@
           >
             Profile
           </router-link>
-          <router-link v-else class="router-link" to="/login">
+          <router-link
+            v-else
+            class="router-link"
+            :class="{ selected: this.$store.state.selected === 'login' }"
+            to="/login"
+          >
             Login
           </router-link>
         </div>

@@ -61,7 +61,6 @@ export default {
     };
   },
   methods: {
-
     async submit() {
       /**
        * Submits a form with the specified options from data().
@@ -123,7 +122,7 @@ export default {
 
 <style scoped>
 form {
-  border: 1px solid #111;
+  border: 1px solid rgb(185, 185, 185);
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -151,7 +150,20 @@ form h3 {
 }
 
 textarea {
+  border: 1px solid rgb(185, 185, 185);
   font-family: inherit;
   font-size: inherit;
+}
+input {
+  border: 1px solid rgb(185, 185, 185);
+}
+
+button {
+  border: 0;
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  height: min-content;
+  padding: 5px;
+  margin-left: 10px;
 }
 </style>
